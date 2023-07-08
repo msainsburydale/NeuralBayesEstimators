@@ -2,7 +2,7 @@
 
 This repository contains the source code for reproducing the results in "Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2022). An arXiv pre-print is available [here](https://arxiv.org/abs/2208.12942).
 
-The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators).
+The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package `NeuralEstimators` and its documentation.  
 
 ## Repository structure
 
