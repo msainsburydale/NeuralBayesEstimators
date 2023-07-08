@@ -1,0 +1,38 @@
+*.Rproj
+.Rproj.user
+.DS_Store
+.Rhistory
+Rplots.pdf
+TeX/
+FindDependencies.R
+
+# misc. files that I keep in the Dropbox folder but don't need to be tracked
+example.jl
+meetings
+forms
+literature
+misc
+unusedsrc
+src/.unused
+tmp*/
+paperwork/
+.paperwork/
+TeX/RSS-journal-notes-for-authors-2021.pdf
+PosteriorMedianSamplingDistribution.pdf
+SpatialConditionalExtremes.tex
+TeX/statsoc.pdf
+TeX/NNParamEstimation.pdf
+transfer.sh
+DependenciesFind.R
+
+# Data files that are too large:
+data/RedSea/ALL_DATA.RData
+
+# Auxilliary files that don't need to be tracked
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.blg
+*.dvi

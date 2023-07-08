@@ -1,0 +1,8 @@
+# Ignore everything in this directory
+*
+# Except these files...
+!.gitignore
+#!best_network.bson
+
+# ...even if they are in subdirectories
+!*/
