@@ -14,16 +14,16 @@ else
 fi
 
 model=Normalsigma
+
 echo ""
 echo "######## Starting experiment on the effect of variable sample size: $model distribution ############"
 echo ""
 
 # Train the estimators
-qt=64
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --qt=$qt --prior=informative --m=-150 --aggregation=mean
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --qt=$qt --prior=informative --m=5    --aggregation=mean
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --qt=$qt --prior=informative --m=150  --aggregation=mean
+julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --m=5
+julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --m=150
+julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --m=-150
 
 # Estimate and plot results
-julia --threads=auto --project=. src/Theoretical/Estimate.jl --model=$model --prior=$prior
-Rscript src/Theoretical/ResultsVariableSetSize.R --model=$model
+julia --threads=auto --project=. src/Theoretical/Estimate.jl --model=$model
+Rscript src/Theoretical/ResultsVariableSampleSize.R --model=$model

@@ -2,16 +2,8 @@ using NeuralEstimators
 using SpatialDeepSets
 using Distributions: InverseGamma, mean
 
-# prior distribution of θ
-if prior == "diffuse"
-	@info "Using a diffuse prior"
-	Ω = InverseGamma(0.7, 0.7)
-elseif prior == "informative"
-	@info "Using an informative prior"
-	Ω = InverseGamma(2, 2)
-else
-	error("Unrecognised prior")
-end
+# prior distribution for θ
+Ω = InverseGamma(2, 2)
 
 ξ = (
 	Ω = Ω,

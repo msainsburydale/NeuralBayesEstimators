@@ -2,16 +2,8 @@ using NeuralEstimators
 using SpatialDeepSets
 using Distributions: Normal, mean
 
-# prior distribution of θ
-if prior == "diffuse"
-	@info "Using a diffuse prior"
-	Ω = Normal(0, 5)
-elseif prior == "informative"
-	@info "Using an informative prior"
-	Ω = Normal(0, 0.5)
-else
-	error("Unrecognised prior")
-end
+# prior distribution for θ
+Ω = Normal(0, 0.5)
 
 ξ = (
 	Ω = Ω,

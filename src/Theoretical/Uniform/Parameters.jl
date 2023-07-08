@@ -2,7 +2,7 @@ using NeuralEstimators
 using SpatialDeepSets
 using Distributions: Uniform, Pareto, mean, quantile
 
-# prior distribution of θ
+# prior distribution for θ
 Ω = Pareto(4, 1)
 
 ξ = (

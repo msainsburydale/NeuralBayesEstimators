@@ -8,12 +8,9 @@ model      <- parse_args(opt_parser)$model
 
 source("src/PlottingFunctions.R")
 
-# hardcoded for now
-prior <- "informative"
-
 # ---- Prep ----
 
-intermediates_path  <- paste0("intermediates/Theoretical/", model, "/", prior, "/")
+intermediates_path  <- paste0("intermediates/Theoretical/", model, "/")
 estimates_path      <- paste0(intermediates_path, "Estimates/")
 img_path            <- paste0("img/Theoretical/", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
@@ -23,15 +20,7 @@ param_labels <- c("θ"  = expression(theta))
 estimator_labels <- c(
   "BayesEstimator" = "Bayes estimator",
   "OAATEstimator" = "One-at-a-time estimator",
-  # We'll be splitting by m, so no need to include it in the label
-  "NN_q1_m10"  = expression("Neural Bayes estimator," ~ hat(theta)("·"~";"~gamma*"*") ~ ":" ~ q[t]   == 1),
-  "NN_q1_m100"  = expression("Neural Bayes estimator," ~ hat(theta)("·"~";"~gamma*"*") ~ ":" ~ q[t]  == 1),
-  "NN_q5_m10"  = expression("Neural Bayes estimator," ~ hat(theta)("·"~";"~gamma*"*") ~ ":" ~ q[t]   == 5),
-  "NN_q5_m100"  = expression("Neural Bayes estimator," ~ hat(theta)("·"~";"~gamma*"*") ~ ":" ~ q[t]  == 5),
-  "NN_q10_m10"  = expression("Neural Bayes estimator," ~ hat(theta)("·"~";"~gamma*"*") ~ ":" ~ q[t]  == 10),
-  "NN_q10_m100"  = expression("Neural Bayes estimator," ~ hat(theta)("·"~";"~gamma*"*") ~ ":" ~ q[t] == 10),
-  "NN_logsumexp_q100_m10"  = expression("Neural Bayes estimator"),
-  "NN_logsumexp_q100_m100"  = expression("Neural Bayes estimator"),
+  "NN_m10"  = "Neural Bayes estimator",
   "ML" = "ML estimator",
   "MAPEstimator" = "MAP estimator"
 )
@@ -39,22 +28,15 @@ estimator_labels <- c(
 estimator_colours <- c(
   "BayesEstimator" = "#21908CFF",
   "OAATEstimator" = "orange",
-  "NN_q1_m10" = "#FDE725FF",
-  "NN_q1_m100" = "#FDE725FF",
-  "NN_q5_m10" = "orange",
-  "NN_q5_m100" = "orange",
-  "NN_q10_m10" = "red",
-  "NN_q10_m100" = "red",
-  "NN_logsumexp_q100_m10" = "red",
-  "NN_logsumexp_q100_m100" = "red",
+  "NN_m10" = "red",
   "ML"    = "#440154FF",
-  "MAPEstimator"    = "orange"
+  "MAPEstimator"    = "pink"
 )
 
 estimator_linetypes <- c(
   "BayesEstimator" = "solid",
   "OAATEstimator" = "solid",
-  "NN_logsumexp_q100_m10" = "solid",
+  "NN_m10" = "solid",
   "ML" = "solid",
   "MAPEstimator" = "solid"
 )
@@ -67,8 +49,8 @@ xi_hat <- estimates_path %>% paste0("estimates_scenarios.csv")  %>% read.csv
 xi     <- estimates_path %>% paste0("parameters_scenarios.csv") %>% read.csv
 truth  <- xi$θ[1]
 theta <- truth
-a <- 4 
-b <- 1 
+a <- 4
+b <- 1
 m <- 10
 atilde <- a + m
 c  <- 2^(-1/atilde)
@@ -90,9 +72,9 @@ densityplot <- function(xi_hat, estimator_subset) {
   figure <- ggplot(xi_hat) +
     geom_line(aes(x = θ, colour = estimator, linetype = estimator),
               stat = "density", adjust = 1.5) +
-    # geom_line(data = analytic_lower, aes(x = x, y = f), colour = "darkgray") + 
-    # geom_line(data = analytic_bulk, aes(x = x, y = f), colour = "darkgray") + 
-    # geom_line(data = analytic_upper, aes(x = x, y = f), colour = "darkgray") + 
+    # geom_line(data = analytic_lower, aes(x = x, y = f), colour = "darkgray") +
+    # geom_line(data = analytic_bulk, aes(x = x, y = f), colour = "darkgray") +
+    # geom_line(data = analytic_upper, aes(x = x, y = f), colour = "darkgray") +
     # scale_colour_estimator(xi_hat) +
     scale_estimator(xi_hat, scale = "colour", values = estimator_colours) +
     scale_estimator(xi_hat, scale = "linetype", values = estimator_linetypes) +
@@ -112,17 +94,17 @@ densityplot <- function(xi_hat, estimator_subset) {
 
   # if Zi ~ Unif(0, theta), then Y = max(Zi) has a known distribution; see https://math.stackexchange.com/a/3287934
   # MLE_density <- function(y, theta, m) ifelse(y <= theta, m * y^(m-1) / theta^m, 0)
-  # figure <- figure + 
+  # figure <- figure +
   #   stat_function(
   #     fun = MLE_density, args = c(truth, 10), n = 1000,
-  #     colour = estimator_colours["ML"], 
+  #     colour = estimator_colours["ML"],
   #     linetype = "dotted", alpha = 0.5
   #     )
 
   return(figure)
 }
 
-estimator_subset <- c("BayesEstimator", "NN_logsumexp_q100_m10", "MAPEstimator", "ML")
+estimator_subset <- c("BayesEstimator", "NN_m10", "OAATEstimator", "ML", "MAPEstimator")
 estimator_order  <- estimator_subset
 
 ggsave(
@@ -131,7 +113,7 @@ ggsave(
   width = 7, height = 3.5, path = img_path, device = "pdf"
 )
 
-estimator_subset <- c("BayesEstimator", "NN_logsumexp_q100_m10", "OAATEstimator", "ML")
+estimator_subset <- c("BayesEstimator", "NN_m10", "OAATEstimator", "ML")
 estimator_order  <- estimator_subset
 
 ggsave(
@@ -141,16 +123,13 @@ ggsave(
 )
 
 
-
-
-
 # ---- Checking with histogram ----
 
-# estimator_subset <- c("BayesEstimator", "NN_logsumexp_q100_m10")
+# estimator_subset <- c("BayesEstimator", "NN_m10")
 # estimator_order  <- estimator_subset
-# 
+#
 # densityplot(xi_hat, estimator_subset)
-# 
+#
 # ggplot(xi_hat %>% filter(estimator %in% estimator_subset)) +
 #   geom_histogram(aes(x = θ, colour = estimator), bins = 100, alpha=0.2, position="identity") +
 #   scale_estimator(xi_hat, scale = "colour", values = estimator_colours) +

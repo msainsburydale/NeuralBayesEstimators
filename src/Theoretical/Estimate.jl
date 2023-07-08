@@ -6,17 +6,9 @@ arg_table = ArgParseSettings()
 		help = "A relative path to the folder of the assumed model."
 		arg_type = String
 		required = true
-	# Note that prior is an argument, and not saved as part of the model,
-	# because we cannot compare estimators under different priors, so it
-	# wouldn't make sense to even attempt it.
-	"--prior"
-		help = "The prior to use; can be 'informative' (the default) or 'diffuse'."
-		arg_type = String
-		default = "informative"
 end
 parsed_args = parse_args(arg_table)
 model = parsed_args["model"]
-prior = parsed_args["prior"]
 
 using NeuralEstimators
 using SpatialDeepSets
@@ -24,7 +16,7 @@ using DataFrames
 using CSV
 using Random: seed!
 
-relative_loadpath = "intermediates/Theoretical/$(model)/$(prior)"
+relative_loadpath = "intermediates/Theoretical/$(model)"
 relative_savepath = relative_loadpath * "/Estimates"
 savepath = joinpath(pwd(), relative_savepath)
 if !isdir(savepath) mkdir(savepath) end
