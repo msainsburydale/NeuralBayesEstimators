@@ -44,8 +44,8 @@ D = pairwise(Euclidean(), S, S, dims = 1)
 K_train = 10_000
 K_val   = K_train ÷ 5
 if quick
-	K_train = K_train ÷ 100
-	K_val   = K_val ÷ 100
+	K_train = K_train ÷ 50
+	K_val   = K_val ÷ 10
 end
 
 @info "Sampling validation parameters..."
@@ -107,8 +107,8 @@ end
 
 
 # Fixed training data but larger amount of training data than validation
-Z_train = simulate(θ_train, ξ, 3m)
-Z_val   = simulate(θ_val, ξ, m)
+Z_train = simulate(θ_train, 3m)
+Z_val   = simulate(θ_val, m)
 for arch_name ∈ keys(architectures)
 	@info "Training the $arch_name network with recycled training data"
 

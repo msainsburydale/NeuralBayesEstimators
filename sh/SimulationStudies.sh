@@ -25,7 +25,7 @@ do
     if [[ $model == "GaussianProcess/nuFixed" ]]; then
         ## Generate and plot the parameter configurations
         Rscript src/$model/Parameters.R $quick
-        Rscript src/$model/PlotParameters.R
+        #Rscript src/$model/PlotParameters.R #TODO this throws an error for some reason
     fi
 
     ## Visualise field realisations
