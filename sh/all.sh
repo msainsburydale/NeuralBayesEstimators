@@ -18,7 +18,7 @@ Rscript Dependencies.R
 
 
 # Should we do a "quick" run through to check that things are working?
-echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working (note that the generated results and plots will not exactly match those in the manuscript if you reply 'y')? (y/n) "
+echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n) "
 read quick_str
 
 if ! [[ $quick_str == "y" ||  $quick_str == "Y" || $quick_str == "n" ||  $quick_str == "N" ]]; then

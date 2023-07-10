@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working (note that the generated results and plots will not exactly match those in the manuscript if you reply 'y')? (y/n) "
+echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n) "
 read quick_str
 if [[ $quick_str == "y" ||  $quick_str == "Y" ]]; then
     quick=--quick
