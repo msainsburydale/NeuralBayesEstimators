@@ -20,6 +20,6 @@ echo "######## Starting experiment on approximating the Bayes estimator: $model 
 echo ""
 
 # Show that NN estimators can approximate the Bayes estimator for a one-parameter model
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --aggregation=logsumexp --m=10
-julia --threads=auto --project=. src/Theoretical/Estimate.jl --model=$model
-Rscript src/Theoretical/ResultsFixedSampleSize.R --model=$model
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --aggregation=logsumexp --m=10
+julia --threads=auto --project=. src/Univariate/Estimate.jl --model=$model
+Rscript src/Univariate/ResultsFixedSampleSize.R --model=$model

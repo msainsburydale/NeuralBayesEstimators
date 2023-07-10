@@ -10,9 +10,9 @@ source("src/PlottingFunctions.R")
 
 # ---- Prep ----
 
-intermediates_path  <- paste0("intermediates/Theoretical/", model, "/")
+intermediates_path  <- paste0("intermediates/Univariate/", model, "/")
 estimates_path      <- paste0(intermediates_path, "Estimates/")
-img_path            <- paste0("img/Theoretical/", model)
+img_path            <- paste0("img/Univariate/", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
 
 param_labels <- c("θ"  = expression(theta))
@@ -21,7 +21,7 @@ estimator_labels <- c(
   "BayesEstimator" = "Bayes estimator",
   "OAATEstimator" = "One-at-a-time estimator",
   "NN_m10"  = "Neural Bayes estimator",
-  "ML" = "ML estimator",
+  "ML" = "Maximum likelihood estimator",
   "MAPEstimator" = "MAP estimator"
 )
 
@@ -76,8 +76,8 @@ densityplot <- function(xi_hat, estimator_subset) {
     # geom_line(data = analytic_bulk, aes(x = x, y = f), colour = "darkgray") +
     # geom_line(data = analytic_upper, aes(x = x, y = f), colour = "darkgray") +
     # scale_colour_estimator(xi_hat) +
-    scale_estimator(xi_hat, scale = "colour", values = estimator_colours) +
-    scale_estimator(xi_hat, scale = "linetype", values = estimator_linetypes) +
+    scale_estimator(xi_hat, scale = "colour", values = estimator_colours[estimator_subset]) +
+    scale_estimator(xi_hat, scale = "linetype", values = estimator_linetypes[estimator_subset]) +
     geom_vline(aes(xintercept = truth), colour = "gray", linetype = "dashed") +
     scale_x_continuous(
       limits = c(0.6, 1.45),
@@ -104,7 +104,7 @@ densityplot <- function(xi_hat, estimator_subset) {
   return(figure)
 }
 
-estimator_subset <- c("BayesEstimator", "NN_m10", "OAATEstimator", "ML", "MAPEstimator")
+estimator_subset <- c("BayesEstimator", "NN_m10", "ML", "MAPEstimator", "OAATEstimator")
 estimator_order  <- estimator_subset
 
 ggsave(
@@ -113,8 +113,9 @@ ggsave(
   width = 7, height = 3.5, path = img_path, device = "pdf"
 )
 
-estimator_subset <- c("BayesEstimator", "NN_m10", "OAATEstimator", "ML")
+estimator_subset <- c("BayesEstimator", "NN_m10", "ML", "OAATEstimator")
 estimator_order  <- estimator_subset
+estimator_labels <- estimator_labels[estimator_subset]
 
 ggsave(
   densityplot(xi_hat, estimator_subset),

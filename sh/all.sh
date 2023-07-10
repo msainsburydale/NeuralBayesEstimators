@@ -33,9 +33,9 @@ echo ""
 
 # Each .sh files asks the user if quick = y/n. To automate this script,
 # we pipe the above response to each .sh file
-yes $quick_str | bash sh/Theoretical.sh          # Section 2
-yes $quick_str | bash sh/SimulationStudies.sh    # Section 4 and Section S7 of the Supplementary Material
-yes $quick_str | bash sh/RedSea.sh               # Section 5
+yes $quick_str | bash sh/Univariate.sh           # Section 2
+yes $quick_str | bash sh/SimulationStudies.sh    # Section 3 and Section S7 of the Supplementary Material
+yes $quick_str | bash sh/RedSea.sh               # Section 4
 yes $quick_str | bash sh/VariableSampleSize.sh   # Section S2 of the Supplementary Material
 yes $quick_str | bash sh/SimulationOnTheFly.sh   # Section S4 of the Supplementary Material
 yes $quick_str | bash sh/Pretraining.sh          # Section S5 of the Supplementary Material

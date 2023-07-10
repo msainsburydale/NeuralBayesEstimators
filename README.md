@@ -25,7 +25,7 @@ We first briefly describe the repository structure, although an understanding of
 where `x` represents the following tree structure, with branches corresponding to different studies in the manuscript:
 
 ```bash
-├── Theoretical         (Section 2)
+├── Univariate          (Section 2)
 ├── GaussianProcess
 │   ├── nuFixed         (Section S7 of the Supplementary Material)
 │   ├── nuVaried        (Section 3.2)
@@ -43,11 +43,17 @@ First, download this repository and navigate to its top-level directory within t
 
 ### Data
 
-The Red Sea data set, analysed in Section 5, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) and place it into the folder  `data/RedSea`.  (To download the file, click "Explore" > "Go to resource".)
+The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) and place it into the folder `data/RedSea`.  (To download the file, click "Explore" > "Go to resource".)
 
 Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if this file is not present.
 
 ### Software dependencies
+
+Before installing the software dependencies, users may wish to setup a `conda` environment, so that the dependencies of this repo do not affect the users current installation. To create a `conda` environment, run the following command at the terminal:
+
+```
+conda create -n NeuralBayesEstimators -c conda-forge julia r-base nlopt
+```
 
 To install the software dependencies for this project, please:
 
@@ -61,9 +67,9 @@ To install the software dependencies for this project, please:
 
 ### Hardware requirements
 
-<!--TODO: Write this up later-->
-<!--You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimensional representations of the models, and you will need at least 64GB of RAM (or RAM + swap) to run the full models.-->
+The fast construction of neural Bayes estimators requires graphical processing units (GPUs). Hence, although the code in this repo will run without a GPU, it is recommended that the user run this code on a workstation with a reasonably powerful GPU. Note that running the "quick" version of the code (see below) is still fast even on the CPU, and so the code can be tested without the need of a GPU.
 
+The Red-Sea application study of Section 4 is memory intensive; you will need at least 128GB of of CPU RAM (or RAM + swap) to run the full (i.e., non "quick") version of this study. If this is an issue, please comment out the line containing `bash sh/RedSea.sh` in the replication script, `sh/all.sh`. (Comments in `.sh` files are made with `#`.)
 
 ### Reproducing the results
 
@@ -73,6 +79,6 @@ The nature of our experiments means that the run time for reproducing the result
 
 Note that the replication script is clearly presented and commented; hence, one may easily "comment out" sections to produce a subset of the results. (Comments in `.sh` files are made with `#`.)
 
-### Minor reproducibility difficulties
+#### Minor reproducibility difficulties
 
 When training neural networks on the GPU, there is some some unavoidable non-determinism: See [here](https://discourse.julialang.org/t/flux-reproducibility-of-gpu-experiments/62092). This does not significantly affect the "story" of the final results, but there may be some slight differences each time the code is executed.

@@ -16,15 +16,15 @@ using DataFrames
 using CSV
 using Random: seed!
 
-relative_loadpath = "intermediates/Theoretical/$(model)"
+relative_loadpath = "intermediates/Univariate/$(model)"
 relative_savepath = relative_loadpath * "/Estimates"
 savepath = joinpath(pwd(), relative_savepath)
 if !isdir(savepath) mkdir(savepath) end
 
-include(joinpath(pwd(), "src/Theoretical/$model/BayesEstimator.jl"))
-include(joinpath(pwd(), "src/Theoretical/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/Theoretical/$model/Simulation.jl"))
-include(joinpath(pwd(), "src/Theoretical/Architecture.jl"))
+include(joinpath(pwd(), "src/Univariate/$model/BayesEstimator.jl"))
+include(joinpath(pwd(), "src/Univariate/$model/Parameters.jl"))
+include(joinpath(pwd(), "src/Univariate/$model/Simulation.jl"))
+include(joinpath(pwd(), "src/Univariate/Architecture.jl"))
 
 seed!(1)
 θ_test = Parameters(1000, ξ)
@@ -83,7 +83,7 @@ titles     = NNs.titles
 use_gpu = fill(true, length(estimators))
 use_ξ   = fill(false, length(estimators))
 
-# ---- Theoretical estimators ----
+# ---- Analytic estimators ----
 
 if @isdefined MLE
 	@info "Including the maximum likelihood estimator"

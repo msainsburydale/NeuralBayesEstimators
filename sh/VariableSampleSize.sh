@@ -20,10 +20,10 @@ echo "######## Starting experiment on the effect of variable sample size: $model
 echo ""
 
 # Train the estimators
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --m=5
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --m=150
-julia --threads=auto --project=. src/Theoretical/Train.jl --model=$model $quick --m=-150
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --m=5
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --m=150
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --m=-150
 
 # Estimate and plot results
-julia --threads=auto --project=. src/Theoretical/Estimate.jl --model=$model
-Rscript src/Theoretical/ResultsVariableSampleSize.R --model=$model
+julia --threads=auto --project=. src/Univariate/Estimate.jl --model=$model
+Rscript src/Univariate/ResultsVariableSampleSize.R --model=$model

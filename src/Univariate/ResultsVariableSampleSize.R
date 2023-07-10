@@ -6,7 +6,7 @@ option_list <- list(
 opt_parser <- OptionParser(option_list=option_list)
 model      <- parse_args(opt_parser)$model
 
-img_path  <- paste0("img/Theoretical/", model)
+img_path  <- paste0("img/Univariate/", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
 
 source("src/PlottingFunctions.R")
@@ -45,7 +45,7 @@ estimator_order <- estimator_subset
 
 all_m <- c("5", "150", "1to150")
 
-intermediates_path  <- paste0("intermediates/Theoretical/", model, "/")
+intermediates_path  <- paste0("intermediates/Univariate/", model, "/")
 estimates_path      <- paste0(intermediates_path, "Estimates/")
 
 # Load in estimates + true parameters

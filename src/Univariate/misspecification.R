@@ -149,5 +149,5 @@ df_long <- melt(df_long, id.vars = c("x", "curve"))
 ggsave(
   figure,
   file = "misspecification.pdf",
-  width = 8, height = 3, path = "img/Theoretical", device = "pdf"
+  width = 8, height = 3, path = "img/Univariate", device = "pdf"
 )

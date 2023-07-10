@@ -49,7 +49,7 @@ estimator_colours <- c(
   "q = 5_m5" = "#FDE725FF",
   "q = 5_m150" = "orange",
   "q = 5_m1to30" = "red",
-  "NN_q5_vanilla_m10" = "red"
+  "NN_m10" = "red"
 )
 
 # NB Graphical devices are often OS-variable; bquote(bold(theta)) does not
@@ -88,8 +88,8 @@ estimator_labels <- c(
   "q = 5_vanilla_m5" = expression(hat(theta)[m==5]("·")),
   "q = 5_vanilla_m150" = expression(hat(theta)[m==150]("·")),
   "q = 5_vanilla_m1to30" = expression(hat(theta)[m%in%1:30]("·")),
-  "NN_q5_vanilla_m10" = expression(hat(theta)[gamma*"*"]("·")),
-  "NN_q5_vanilla_m100" = expression(hat(theta)[gamma*"*"]("·"))
+  "NN_m10" = expression(hat(theta)[gamma*"*"]("·")),
+  "NN_m100" = expression(hat(theta)[gamma*"*"]("·"))
 )
 
 # Specifies the order that the estimators should appear in the plot legends.

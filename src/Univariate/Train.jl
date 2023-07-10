@@ -37,13 +37,13 @@ using DataFrames
 using Tables
 using Random: seed!
 
-include(joinpath(pwd(), "src/Theoretical/Architecture.jl"))
-include(joinpath(pwd(), "src/Theoretical/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/Theoretical/$model/Simulation.jl"))
+include(joinpath(pwd(), "src/Univariate/Architecture.jl"))
+include(joinpath(pwd(), "src/Univariate/$model/Parameters.jl"))
+include(joinpath(pwd(), "src/Univariate/$model/Simulation.jl"))
 
 m_title = typeof(m) <: AbstractRange ? "$(m.start)to$(m.stop)" : "$m"
 title =  "m$(m_title)$(expert ? "_expert" : "")"
-savepath = "intermediates/Theoretical/$model/runs_NN_$title"
+savepath = "intermediates/Univariate/$model/runs_NN_$title"
 
 if !isdir(savepath) mkpath(savepath) end
 
