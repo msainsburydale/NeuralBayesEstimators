@@ -23,3 +23,18 @@ echo ""
 julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --aggregation=logsumexp --m=10
 julia --threads=auto --project=. src/Univariate/Estimate.jl --model=$model
 Rscript src/Univariate/ResultsFixedSampleSize.R --model=$model
+
+model=Normalsigma
+
+echo ""
+echo "######## Starting experiment on the effect of variable sample size: $model distribution ############"
+echo ""
+
+# Train the estimators
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --m=5
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --m=150
+julia --threads=auto --project=. src/Univariate/Train.jl --model=$model $quick --m=-150
+
+# Estimate and plot results
+julia --threads=auto --project=. src/Univariate/Estimate.jl --model=$model
+Rscript src/Univariate/ResultsVariableSampleSize.R --model=$model
