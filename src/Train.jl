@@ -46,7 +46,6 @@ include(joinpath(pwd(), "src/Architecture.jl"))
 
 if !isdir("intermediates/$model") mkpath("intermediates/$model") end
 
-
 batchsize = 32
 
 if model == "GaussianProcess/nuFixed"
@@ -83,6 +82,8 @@ end
 
 savepath = "intermediates/$model/runs_N$(deep ? "D" : "")"
 
+epochs = quick ? 5 : 300
+
 if length(m) == 1
 
 	m = m[1]
@@ -90,6 +91,7 @@ if length(m) == 1
 	θ̂ = train(
 		  θ̂, θ_train, θ_val, simulate, m = m, batchsize = batchsize,
 		  savepath = savepath * "_m$(m)",
+		  epochs = epochs,
 		  stopping_epochs = m == 1 ? 10 : 4
 	)
 else
@@ -109,6 +111,7 @@ else
 		global θ̂ = train(
 			  θ̂, θ_train, θ_val, Z_train, subsetdata(Z_val, 1:mᵢ), batchsize = batchsize,
 			  savepath = savepath * "_m$(mᵢ)", optimiser = optimiser,
+			  epochs = epochs,
 			  stopping_epochs = mᵢ == 1 ? 10 : 4
 		)
 	end

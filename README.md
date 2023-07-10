@@ -52,15 +52,24 @@ Note that we have included checks at the beginning of the replication script to 
 Before installing the software dependencies, users may wish to setup a `conda` environment, so that the dependencies of this repo do not affect the users current installation. To create a `conda` environment, run the following command at the terminal:
 
 ```
-conda create -n NeuralBayesEstimators -c conda-forge julia r-base nlopt
+conda create -n NeuralBayesEstimators -c conda-forge julia=1.7.1 r-base nlopt
 ```
 
-To install the software dependencies for this project, please:
+Then, to activate the `conda` environment, run:
 
-- Install Julia >= 1.7.0. (See [here](https://julialang.org/downloads/).)
+```
+conda activate NeuralBayesEstimators
+```
+
+The above `conda` environment installs `julia` and `R` automatically; if you do not wish to use a `conda` environment, you will need to install these manually if they are not already on your system:  
+
+- Install Julia 1.7.1. (See [here](https://julialang.org/downloads/).)
   - Ensure that your system can find the `julia` executable (this usually needs to be done manually; see, e.g., [here](https://julialang.org/downloads/platform/#linux_and_freebsd)) by entering `julia` in terminal, which should open the Julia REPL (run `exit()` to leave the REPL).
 - Install R >= 4.0.0. (See [here](https://www.r-project.org/).)
-- Download this repository, navigate (i.e., `cd`) to its top level in terminal, and enter:
+
+Once `julia` and `R` are setup, install package dependencies as follows:
+
+- In terminal, navigate (i.e., `cd`) to the top level of this repository, and enter:
   - `julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'`. This will install all Julia package dependencies given in the files `Project.toml` and `Manifest.toml`.
   - `Rscript Dependencies.R`. This will install all R package dependencies given in `Dependencies.txt`. The user will be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`; this option is only recommended if there is a problem with the latest version of the packages.
 

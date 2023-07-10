@@ -67,7 +67,7 @@ m_cutoffs = [1, 20, 50, 100]
 @assert length(m_cutoffs) == length(m) - 1
 target_order = "ND_m" .* string.(m)
 indices      = indexin(target_order, titles)
-θ̂_piecewise  = DeepSetPiecewise(estimators[indices], m_cutoffs)
+θ̂_piecewise  = PiecewiseEstimator(estimators[indices], m_cutoffs)
 
 estimators = [estimators..., θ̂_piecewise]
 push!(titles, "ND_piecewise")
