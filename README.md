@@ -6,7 +6,7 @@ The methodology described in the manuscript has been developed into a user-frien
 
 ## Repository structure
 
-We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). These folders are divided into different sections of the manuscript; that is, the repository is organised as:
+We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). These folders are divided as follows,
 
 ```bash
 ├── data
@@ -22,7 +22,7 @@ We first briefly describe the repository structure, although an understanding of
 ├── sh
 ```
 
-where `x` represents the following tree structure, with branches corresponding to different studies in the manuscript:
+where `x` represents the following tree structure:
 
 ```bash
 ├── Univariate          (Section 2)
@@ -43,7 +43,10 @@ First, download this repository and navigate to its top-level directory within t
 
 ### Data
 
-The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) and place it into the folder `data/RedSea`.  (To download the file, click "Explore" > "Go to resource".)
+The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://zenodo.org/record/8134200). 
+<!-- [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) and place it into the folder `data/RedSea`.  (To download the file, click "Explore" > "Go to resource".) -->
+
+
 
 Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if this file is not present.
 
