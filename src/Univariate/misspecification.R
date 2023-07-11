@@ -124,9 +124,7 @@ df_long$OLS <- c(sapply(list(OLS1, OLS2, OLS3, OLS4), pred, x))
 df_long$y <- NULL
 df_long <- melt(df_long, id.vars = c("x", "curve"))
 
-
-# TODO make beta bold face
-(figure <- ggplot(df_long) +
+figure <- ggplot(df_long) +
     geom_point(data = tmp, aes(x, y), size = 0.25) +
   geom_line(aes(x, value, colour = variable)) +
   facet_wrap(curve~., nrow = 1) +
@@ -143,7 +141,7 @@ df_long <- melt(df_long, id.vars = c("x", "curve"))
     strip.background = element_blank(),
     strip.text.x = element_blank(),
     legend.text.align = 0
-  ))
+  )
 
 
 ggsave(

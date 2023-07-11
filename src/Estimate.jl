@@ -8,10 +8,14 @@ arg_table = ArgParseSettings()
 	"--ML"
         help = "Flag indicating whether we should conduct likelihood estimation."
     	action = :store_true
+	"--quick"
+		help = "A flag controlling whether or not a computationally inexpensive run should be done."
+		action = :store_true
 end
 parsed_args = parse_args(arg_table)
 model = parsed_args["model"]
 ML    = parsed_args["ML"]
+quick = parsed_args["quick"]
 
 using NeuralEstimators
 using SpatialDeepSets
@@ -34,11 +38,8 @@ if model == "GaussianProcess/nuFixed"
 	θ_scenarios = Parameters(params_path * "scenarios_")
 else
 	seed!(1)
-	if model == "ConditionalExtremes" && ML
-		θ_test = Parameters(500, ξ)
-	else
-	    θ_test = Parameters(500, ξ)
-	end
+	K = quick ? 10 : 500
+	θ_test = Parameters(K, ξ)
 
 	# Sample randomly from Ω to generate a small set of parameters used for
 	# visualising the joint distributions of the estimators.
@@ -86,7 +87,6 @@ println("Neural network estimators: $(join(titles, ", "))")
 # ---- Likelihood functions ----
 
 if ML
-	println("Performing likelihood-based estimation... this may take a while.")
 	println("Number of CPU threads available for likelihood estimation: $(Threads.nthreads())")
 	include(joinpath(pwd(), "src/$model/ML.jl"))
 
@@ -105,7 +105,6 @@ end
 
 # ---- Estimation over the test set ----
 
-
 all_m   = [1, 5, 10, 20, 30, 60, 90, 120, 150]
 estimates = estimate(
 	estimators, ξ, θ_test; m = all_m,
@@ -115,14 +114,11 @@ estimates = estimate(
 
 if ML
 
-	if model == "ConditionalExtremes"
-		all_m = [120, 150]
-	end
-
 	if model == "Schlather"
 		# Estimate using several different pairwise likelihood estimators to
 		# show that d = 3 is optimal:
-		θ_testsmall = Parameters(100, ξ)
+		K = quick ? 5 : 100
+		θ_testsmall = Parameters(K, ξ)
 
 		PL2(y, ξ) = PL(y, ξ, 2)
 		PL3(y, ξ) = PL(y, ξ, 3)
@@ -142,8 +138,10 @@ if ML
 	ξ₀ = (ξ..., θ₀ = θ_test.θ)
 
 	estimates = estimate(
-		likelihood_estimators, ξ₀, θ_test; m = all_m, use_ξ = true, use_gpu = false,
-		estimator_names = likelihood_titles, parameter_names = ξ.parameter_names,
+		likelihood_estimators, ξ₀, θ_test;
+		m = all_m, use_ξ = true, use_gpu = false,
+		estimator_names = likelihood_titles,
+		parameter_names = ξ.parameter_names,
 		save = [savepath, "likelihood_test"]
 		)
 end
@@ -151,31 +149,29 @@ end
 
 # ---- Estimation over several "scenarios", a subset of the test set ----
 
-
 all_m = [1, 30, 150]
 
+num_rep = 100
+
 estimates = estimate(
-	estimators, ξ, θ_scenarios; m = all_m, num_rep = 100,
-	estimator_names = titles, parameter_names = ξ.parameter_names,
+	estimators, ξ, θ_scenarios;
+	m = all_m,
+	num_rep = num_rep,
+	estimator_names = titles,
+	parameter_names = ξ.parameter_names,
 	save = [savepath, "scenarios"]
 )
 
 if ML
 
-	if model == "ConditionalExtremes"
-		all_m   = [150]
-		num_rep = 32
-	else
-		num_rep = 100
-	end
-
 	ξ₀ = (ξ..., θ₀ = θ_scenarios.θ)
 
 	estimates = estimate(
 		likelihood_estimators, ξ₀, θ_scenarios; m = all_m,
-		num_rep = num_rep,
+		num_rep = quick ? 5 : num_rep, # likelihood estimation is slow, so only do a few if quick=true
 		use_ξ = true, use_gpu = false,
-		estimator_names = likelihood_titles, parameter_names = ξ.parameter_names,
+		estimator_names = likelihood_titles,
+		parameter_names = ξ.parameter_names,
 		save = [savepath, "likelihood_scenarios"]
 	)
 

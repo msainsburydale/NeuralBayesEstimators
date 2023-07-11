@@ -7,10 +7,8 @@ read quick_str
 
 if [[ $quick_str == "y" ||  $quick_str == "Y" ]]; then
     quick=--quick
-    ML=""
 elif [[ $quick_str == "n" ||  $quick_str == "N" ]]; then
     quick=""
-    ML=--ML
 else
     echo "Please re-run and type y or n"
     exit 1
@@ -25,7 +23,7 @@ do
     if [[ $model == "GaussianProcess/nuFixed" ]]; then
         ## Generate and plot the parameter configurations
         Rscript src/$model/Parameters.R $quick
-        #Rscript src/$model/PlotParameters.R #TODO this throws an error for some reason
+        #Rscript src/$model/PlotParameters.R # this throws an error for some reason on the HPC; it's a minor plot in the supp, so ok to omit
     fi
 
     ## Visualise field realisations
@@ -41,9 +39,9 @@ do
 
     # Estimation
     if [[ $model == "ConditionalExtremes" ]]; then
-        julia --threads=auto --project=. src/Estimate.jl --model=$model
+        julia --threads=auto --project=. src/Estimate.jl --model=$model $quick
     else
-        julia --threads=auto --project=. src/Estimate.jl --model=$model $ML
+        julia --threads=auto --project=. src/Estimate.jl --model=$model --ML $quick
     fi
 
     ## Results (plots, etc.)

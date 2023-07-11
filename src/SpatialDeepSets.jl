@@ -256,7 +256,7 @@ function simulateconditionalextremes(
 end
 
 function simulateconditionalextremes(
-	θ::AbstractVector{T}, L::AbstractArray{T, 2}, h::AbstractVector{T}, s₀_idx::Integer, u::T
+	θ::AbstractVector{T}, L::AbstractArray{T, 2}, h::AbstractVector{T}, s₀_idx::Integer, u::T; stabilise_variance::Bool = true
 	) where T <: Number
 
 	@assert length(θ) == 8
@@ -305,7 +305,9 @@ function simulateconditionalextremes(
 	Z = a.(h, Z₀, λ = λ, κ = κ) + b.(h, Z₀, β = β, λ = λ, κ = κ) .* Y
 
 	# Variance stabilising transform
-	Z = cbrt.(Z) # TODO decide if this is what we want to do; can add an arguement transform::Bool = true.
+	if stabilise_variance
+		Z = cbrt.(Z)
+	end
 
 	return Z
 end

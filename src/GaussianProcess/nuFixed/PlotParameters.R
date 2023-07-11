@@ -50,11 +50,6 @@ figure <- ggplot(data = df, aes(x = logsigma2, y = rho, colour = set, size = set
         legend.text = element_text(size = 13))
 
 ggsave(
-  figure, filename = "ParameterConfigurations.png",
-  path = img_path, device = "png", width = 5, height = 3
-)
-
-ggsave(
   figure, filename = "ParameterConfigurations.pdf",
   path = img_path, device = "pdf", width = 5, height = 3
 )
