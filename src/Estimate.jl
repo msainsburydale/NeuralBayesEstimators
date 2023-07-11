@@ -11,11 +11,15 @@ arg_table = ArgParseSettings()
 	"--quick"
 		help = "A flag controlling whether or not a computationally inexpensive run should be done."
 		action = :store_true
+	"--linesearch"
+		help = "A flag controlling whether or not to perform the line-search for the optimal fixed cut-off distance, d, when choosing pairs for the pairwise likelihood."
+		action = :store_true
 end
 parsed_args = parse_args(arg_table)
 model = parsed_args["model"]
 ML    = parsed_args["ML"]
 quick = parsed_args["quick"]
+linesearch = parsed_args["linesearch"]
 
 using NeuralEstimators
 using SpatialDeepSets
@@ -114,7 +118,13 @@ estimates = estimate(
 
 if ML
 
-	if model == "Schlather"
+	# NB The following code is needed to generate Figure S12 of the
+	#    Supplementary Material (which illustrates the line search for the fixed
+	#    cut-off distance, d). We do not run it by default (it takes a long time
+	#    to run and is not central to the paper), but this can be changed by
+	#    adding the flag --linesearch in the controlling .sh file.
+
+	if model == "Schlather" && linesearch
 		# Estimate using several different pairwise likelihood estimators to
 		# show that d = 3 is optimal:
 		K = quick ? 5 : 100
