@@ -2,7 +2,7 @@
 
 This repository contains code for reproducing the results in ["Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2022)](https://arxiv.org/abs/2208.12942).
 
-The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.  
+The methodology described in the manuscript has been developed into a user-friendly and well-documented Julia package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [R interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.  
 
 ## Repository structure
 
@@ -47,17 +47,17 @@ Then activate the `conda` environment with:
 conda activate NeuralBayesEstimators
 ```
 
-The above `conda` environment installs `Julia` and `R` automatically. If you do not wish to use a `conda` environment, you will need to install `Julia` and `R` manually if they are not already on your system:  
+The above `conda` environment installs Julia and R automatically. If you do not wish to use a `conda` environment, you will need to install Julia and R manually if they are not already on your system:  
 
-- Install `Julia` 1.7.1. (See [here](https://julialang.org/downloads/).)
+- Install Julia 1.7.1. (See [here](https://julialang.org/downloads/).)
   - Ensure that your system can find the `julia` executable (this usually needs to be done manually; see, e.g., [here](https://julialang.org/downloads/platform/#linux_and_freebsd)) by entering `julia` in terminal, which should open the Julia REPL (run `exit()` to leave the REPL).
 - Install R >= 4.0.0. (See [here](https://www.r-project.org/).)
 
-Once `Julia` and `R` are setup, install package dependencies as follows:
+Once Julia and R are setup, install package dependencies as follows:
 
 - In terminal, navigate (i.e., `cd`) to the top level of this repository, and enter:
-  - `julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'`. This will install all `Julia` package dependencies given in `Project.toml` and `Manifest.toml`.
-  - `Rscript Dependencies.R`. This will install all `R` package dependencies given in `Dependencies.txt`.
+  - `julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'`. This will install all Julia package dependencies given in `Project.toml` and `Manifest.toml`.
+  - `Rscript Dependencies.R`. This will install all R package dependencies given in `Dependencies.txt`.
 
 
 ### Hardware requirements

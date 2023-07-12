@@ -1,6 +1,6 @@
 # Source code
 
-The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.
+The methodology described in the manuscript has been developed into a user-friendly and well-documented Julia package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [R interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.
 
 The primary models considered in the manuscript are those discussed in Section 3, namely, the Gaussian process model, Schlather's max-stable model, and the spatial conditional extremes model; these models are represented by the folders `GaussianProcess`, `Schlather`, and `ConditionalExtremes`, respectively.  Each folder contains the scripts:
 - `Parameters.jl`: Defines the prior measure, Ω(⋅), and intermediate objects needed for data simulation (e.g., distance matrices).
