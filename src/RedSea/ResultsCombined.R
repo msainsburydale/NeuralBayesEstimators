@@ -15,15 +15,16 @@ suppressMessages({
   library("gridExtra")
   library("xtable")
   library("stringr") # str_interp for string interpolation
-  library("ggOceanMaps")
+  # library("ggOceanMaps")
   options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 })
 source("src/PlottingFunctions.R")
 
 # Base map for the Red Sea
-dt <- data.frame(lon = c(37.1, 37.1,  43,  43),
-                 lat = c(15.5, 20.4, 20.4, 15.5))
-RedSea <- basemap(data = dt)
+# dt <- data.frame(lon = c(37.1, 37.1,  43,  43),
+#                  lat = c(15.5, 20.4, 20.4, 15.5))
+# RedSea <- basemap(data = dt)
+RedSea <- ggplot() # no base map
 
 param_labels <- c(
   "κ"  = expression(kappa),

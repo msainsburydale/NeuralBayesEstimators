@@ -56,9 +56,9 @@ end
 m = [1, 10, 30, 75, 150]
 
 @info "Simulating validation data..."
-sim_time = @elapsed Z_val = simulate(θ_val, ξ, maximum(m))
+sim_time = @elapsed Z_val = simulate(θ_val, maximum(m))
 @info "Simulating training data..."
-sim_time += @elapsed Z_train = simulate(θ_train, ξ, 2 * maximum(m))
+sim_time += @elapsed Z_train = simulate(θ_train, 2 * maximum(m))
 CSV.write("$intermediates_path/sim_time.csv", Tables.table([sim_time]), header = false)
 
 

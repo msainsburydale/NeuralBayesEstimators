@@ -15,7 +15,7 @@ for data_type ∈ ("regular", "irregular")
 	# The number of fields in each bootstrap data set is variable (some groups
 	# are larger than others), so we cannot store the data as a 3D array. We
 	# have to store it as a vector of 2D arrays, where the number of columns varies.
-    Z̃ = vcat([nonparametricbootstrap(identity, Z, blocks, B = 1, use_gpu = false) for b ∈ 1:B₂]...)
+    Z̃ = vcat([bootstrap(identity, Z, blocks = blocks, B = 1, use_gpu = false) for b ∈ 1:B₂]...) # B₂ defined in src/RedSea/Bootstrap.jl
 
 	# Compute the proprtion of exceedances in each region
 	π̃ = bootstrap_threshold_exceedances(Z̃, region, u)

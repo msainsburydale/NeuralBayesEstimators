@@ -39,7 +39,7 @@ install_dependencies <- function(install_exact_versions) {
   ## These packages are treated individually because they are not available on
   ## CRAN, so we need to specify their repos.
 
-  if(!("ggOceanMapsData" %in% rownames(installed.packages())))
+  if("ggOceanMapsData" %in% names(pkg_versions) & !("ggOceanMapsData" %in% rownames(installed.packages())))
     #devtools::install_github("MikkoVihtakari/ggOceanMapsData")
     install.packages("ggOceanMapsData", repos = c("https://mikkovihtakari.github.io/drat", "https://cloud.r-project.org"), dependencies = TRUE)
 

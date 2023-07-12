@@ -68,9 +68,6 @@ if (quick) {
 
 all_sets <- names(n)
 
-all_sets
-
-
 set.seed(1)
 # param_grid <- lapply(all_sets, function(set) lhs_design(n[set], t(ranges)) )
 param_grid <- lapply(all_sets, function(set) {
@@ -81,7 +78,7 @@ names(param_grid) <- all_sets
 
 generate_parameter_configurations <- function(type) {
 
-  cat("Generating parameter configurations for the", type, "Red Sea data set...\n")
+  cat("\nGenerating parameter configurations for the", type, "Red Sea data set...\n")
 
   # Directories
   data_path <- paste0("./data/RedSea/", type)

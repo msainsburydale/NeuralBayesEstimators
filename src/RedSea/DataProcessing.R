@@ -1,6 +1,7 @@
 suppressMessages({
   library("ggplot2")
   library("dplyr")
+  library("plyr")
   library("ggpubr")
   library("viridis") # viridis colour scale
   library("reshape2")
@@ -9,17 +10,20 @@ suppressMessages({
   library("ismev")
   library("evd")
 
-  library("ggspatial")
-  library("ggOceanMapsData")
-  library("ggOceanMaps")
+  # Removed these dependencies as they were causing problems. They are just
+  # needed to make the plots pretty (e.g., showing degrees on the axis).
+  #library("ggspatial")
+  #library("ggOceanMapsData")
+  #library("ggOceanMaps")
 
   library("scales") # plotting against time
 })
 
 # Base map for the Red Sea
-dt <- data.frame(lon = c(37.1, 37.1,  43,  43),
-                 lat = c(15.5, 20.4, 20.4, 15.5))
-RedSea <- basemap(data = dt)
+#dt <- data.frame(lon = c(37.1, 37.1,  43,  43),
+#                 lat = c(15.5, 20.4, 20.4, 15.5))
+#RedSea <- basemap(data = dt)
+RedSea <- ggplot() # no base map
 
 # ---- Helper functions ----
 
@@ -102,9 +106,9 @@ find_extreme_fields <- function(data_L, s0_idx, path) {
   idx <- as.numeric(format(time_ext, "%Y")) == 2015
   dfZ <- as.data.frame(extreme_data_L[, idx])
   names(dfZ) <- time_ext[idx]
-  dfZ <- reshape2::melt(dfZ)
+  dfZ <- reshape2::melt(dfZ, measure.vars = names(dfZ))
   dfZ <- cbind(dfZ, S)
-  dfZ <- rename(dfZ, time = variable, Z = value)
+  dfZ <- dplyr::rename(dfZ, time = variable, Z = value)
 
   # Keep only the first 24 fields so that we can display in a neat 4 x 6 grid.
   # NB: Could also do 5 x 5, but 4 x 6 saves a bit of space.
@@ -270,7 +274,7 @@ loc  <- full_loc[idx, ]
 cat("Number of observations in the irregular Red Sea data set:", length(idx))
 
 ## Transform to Laplace margins:
-data_L <- apply(data, 2, laplaceMargins)
+suppressWarnings(data_L <- apply(data, 2, laplaceMargins))
 
 ## Save new datasets:
 save(data, loc, file = paste0(path, "/data_subset_OriginalScale.RData"))
@@ -319,7 +323,7 @@ cat("Number of locations in each field in the (regular) Red Sea data set:", leng
 # Sanity check: ggplot() + geom_point(aes(x = loc[, "lon"], y = loc[, "lat"]))
 
 ## Transform the data to Laplace margins:
-data_L <- apply(data, 2, laplaceMargins)
+suppressWarnings(data_L <- apply(data, 2, laplaceMargins))
 
 ## Save new data sets:
 save(data, loc, file = paste0(path, "/data_subset_OriginalScale.RData"))

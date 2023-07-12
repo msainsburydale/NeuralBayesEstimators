@@ -38,15 +38,13 @@ Rscript src/PlotLoss.R --path=RedSea/CNN
 julia --threads=auto --project=. src/RedSea/Estimate.jl --arch=CNN --data_type=regular
 Rscript src/RedSea/Results.R --arch=CNN --data_type=regular
 
-julia --threads=auto --project=. src/RedSea/Train.jl $quick --arch=DNN  --data_type=regular
-Rscript src/PlotLoss.R --path=RedSea/DNNirregular
-julia --threads=auto --project=. src/RedSea/Estimate.jl --arch=DNN  --data_type=regular
-Rscript src/RedSea/Results.R --arch=DNN  --data_type=regular
-
-julia --threads=auto --project=. src/RedSea/Train.jl $quick --arch=DNN  --data_type=irregular
-Rscript src/PlotLoss.R --path=RedSea/DNNregular
-julia --threads=auto --project=. src/RedSea/Estimate.jl --arch=DNN  --data_type=irregular
-Rscript src/RedSea/Results.R --arch=DNN  --data_type=irregular
+for datatype in regular irregular
+do
+    julia --threads=auto --project=. src/RedSea/Train.jl $quick --arch=DNN  --data_type=$datatype
+    Rscript src/PlotLoss.R --path=RedSea/DNN$datatype
+    julia --threads=auto --project=. src/RedSea/Estimate.jl --arch=DNN  --data_type=$datatype
+    Rscript src/RedSea/Results.R --arch=DNN --data_type=$datatype
+done
 
 # Plots that involve all of the neural estimators
 Rscript src/RedSea/ResultsCombined.R

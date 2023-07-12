@@ -2,27 +2,11 @@
 
 This repository contains the source code for reproducing the results in "Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2022). An arXiv pre-print is available [here](https://arxiv.org/abs/2208.12942).
 
-The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package `NeuralEstimators` and its documentation.  
+The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.  
 
 ## Repository structure
 
-We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). These folders are divided as follows,
-
-```bash
-├── data
-├── src
-│   ├── common source code
-│   ├── x
-├── intermediates
-│   ├── x
-├── img
-│   ├── x
-├── results
-│   ├── x
-├── sh
-```
-
-where `x` represents the following tree structure:
+We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). Each folder is then further divided into the following tree structure, where each branch is associated with one component of the manuscript: 
 
 ```bash
 ├── Univariate          (Section 2)
@@ -43,10 +27,8 @@ First, download this repository and navigate to its top-level directory within t
 
 ### Data
 
-The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://zenodo.org/record/8134200). 
+The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://zenodo.org/record/8134200).
 <!-- [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) and place it into the folder `data/RedSea`.  (To download the file, click "Explore" > "Go to resource".) -->
-
-
 
 Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if this file is not present.
 
@@ -93,4 +75,4 @@ Note that the replication script is clearly presented and commented; hence, one 
 
 #### Minor reproducibility difficulties
 
-When training neural networks on the GPU, there is some some unavoidable non-determinism: See [here](https://discourse.julialang.org/t/flux-reproducibility-of-gpu-experiments/62092). This does not significantly affect the "story" of the final results, but there may be some slight differences each time the code is executed.
+When training neural networks on the GPU, there is some some unavoidable non-determinism: see [here](https://discourse.julialang.org/t/flux-reproducibility-of-gpu-experiments/62092). This does not significantly affect the "story" of the final results, but there may be some slight differences each time the code is executed.

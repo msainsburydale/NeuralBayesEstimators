@@ -124,7 +124,7 @@ CSV.write(joinpath(savepath, "bootstrap_time_nonparametric.csv"), Tables.table([
 # proprtion of threshold exceedances. First, construct a Parameters object for θ̃.
 θ̃_params = Parameters(Float64.(θ̃), ξ, J = 1)
 
-Z̃ = simulate(θ̃_params, ξ, B₂)
+Z̃ = simulate(θ̃_params, B₂)
 Z̃ = broadcast.(ξ.invtransform, Z̃)
 if arch == "DNN"
 	Z̃ = dropdims.(Z̃, dims = 2)
