@@ -34,9 +34,9 @@ echo ""
 # we pipe the above response to each .sh file
 yes $quick_str | bash sh/Univariate.sh           # Section 2 and Section S2 of the Supplementary Material
 yes $quick_str | bash sh/SimulationStudies.sh    # Section 3 and Section S7 of the Supplementary Material
-yes $quick_str | bash sh/RedSea.sh               # Section 4
 yes $quick_str | bash sh/SimulationOnTheFly.sh   # Section S4 of the Supplementary Material
 yes $quick_str | bash sh/Pretraining.sh          # Section S5 of the Supplementary Material
+yes $quick_str | bash sh/RedSea.sh               # Section 4
 
 echo ""
 echo "######## Everything finished! ############"

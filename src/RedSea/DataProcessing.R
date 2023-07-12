@@ -9,6 +9,7 @@ suppressMessages({
   library("ismev")
   library("evd")
 
+  library("ggspatial")
   library("ggOceanMapsData")
   library("ggOceanMaps")
 

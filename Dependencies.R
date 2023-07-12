@@ -41,7 +41,7 @@ install_dependencies <- function(install_exact_versions) {
 
   if(!("ggOceanMapsData" %in% rownames(installed.packages())))
     #devtools::install_github("MikkoVihtakari/ggOceanMapsData")
-    install.packages("ggOceanMapsData", repos = c("https://mikkovihtakari.github.io/drat", "https://cloud.r-project.org"))
+    install.packages("ggOceanMapsData", repos = c("https://mikkovihtakari.github.io/drat", "https://cloud.r-project.org"), dependencies = TRUE)
 
   ## Remove this from the search list so that the script does not
   ## attempt to re-install them
@@ -68,8 +68,6 @@ install_dependencies <- function(install_exact_versions) {
       devtools::install_version(pkg, version = pkg_versions[pkg],
                                 repos = CRANMIRROR, upgrade = "never",
                                 dependencies = TRUE)
-
-     # install.packages(pkg, repos = CRANMIRROR, dependencies = TRUE)
     }
   }
 

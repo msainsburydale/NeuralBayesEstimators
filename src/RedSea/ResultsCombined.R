@@ -40,12 +40,12 @@ param_labels <- c(
 threshold_labels <- c(
   "Empirical"  = "Empirical",
   "CNN" = expression(paste("Model: ", widehat(bold(theta))["CNN"])),
-  "FC" = expression(paste("Model: ", widehat(bold(theta))["DNN"])),
+  "DNN" = expression(paste("Model: ", widehat(bold(theta))["DNN"])),
   "ML" = expression(paste("Model: ", widehat(bold(theta))["ML"]))
 )
 estimator_labels <- c(
   "CNN" = expression(widehat(bold(theta))["CNN"]),
-  "FC" = expression(widehat(bold(theta))["DNN"])
+  "DNN" = expression(widehat(bold(theta))["DNN"])
 )
 
 alpha <- 0.1 # significance level for confidence intervals
@@ -58,26 +58,26 @@ renamedelta <- function(df) {
 
 # ---- Estimates and bootstrap confidence intervals ----
 
-# Combined table of estimates and confidence intervals from FC, CNN, and eventually ML
+# Combined table of estimates and confidence intervals from DNN, CNN, and eventually ML
 
 caption <- "Parameter estimates and confidence intervals for the Red Sea data set."
 
-theta_hat_FC <- read.csv("intermediates/RedSea/FCregular/Estimates/real_data_estimates.csv") %>% renamedelta %>% round(2)
+theta_hat_DNN <- read.csv("intermediates/RedSea/DNNregular/Estimates/real_data_estimates.csv") %>% renamedelta %>% round(2)
 theta_hat_CNN <- read.csv("intermediates/RedSea/CNN/Estimates/real_data_estimates.csv") %>% renamedelta %>% round(2)
-rownames(theta_hat_CNN) <- rownames(theta_hat_FC) <- "Estimate"
+rownames(theta_hat_CNN) <- rownames(theta_hat_DNN) <- "Estimate"
 
-theta_tilde_FC <- read.csv("intermediates/RedSea/FCregular/Estimates/bootstrap_samples_nonparametric.csv")  %>% renamedelta
+theta_tilde_DNN <- read.csv("intermediates/RedSea/DNNregular/Estimates/bootstrap_samples_nonparametric.csv")  %>% renamedelta
 theta_tilde_CNN <- read.csv("intermediates/RedSea/CNN/Estimates/bootstrap_samples_nonparametric.csv")  %>% renamedelta
 
-CI_FC <- apply(theta_tilde_FC, 2, function(x) quantile(x, c(alpha/2, 1 - alpha/2))) %>% round(2)
+CI_DNN <- apply(theta_tilde_DNN, 2, function(x) quantile(x, c(alpha/2, 1 - alpha/2))) %>% round(2)
 CI_CNN <- apply(theta_tilde_CNN, 2, function(x) quantile(x, c(alpha/2, 1 - alpha/2))) %>% round(2)
 
-FC <- rbind(theta_hat_FC, CI_FC)
-FC <- apply(FC, 2, function(x) paste0(x[1], " (", x[2], ", ", x[3], ")"))
+DNN <- rbind(theta_hat_DNN, CI_DNN)
+DNN <- apply(DNN, 2, function(x) paste0(x[1], " (", x[2], ", ", x[3], ")"))
 CNN <- rbind(theta_hat_CNN, CI_CNN)
 CNN <- apply(CNN, 2, function(x) paste0(x[1], " (", x[2], ", ", x[3], ")"))
 
-combined <- rbind(CNN, FC)
+combined <- rbind(CNN, DNN)
 
 # Replace unicode with tex version for direct input to tex file (only need to add \ in the tex file)
 # colnames(combined) <- colnames(combined) %>%
@@ -105,7 +105,7 @@ xtable(t(combined), type = "latex",
 
 # ---- Variable sample size ----
 
-df <- lapply(c("CNN", "FCregular", "FCirregular"), function(x) {
+df <- lapply(c("CNN", "DNNregular", "DNNirregular"), function(x) {
   str_interp("intermediates/RedSea/${x}/Estimates/merged_test.csv") %>%
     read.csv  %>%
     filter(estimator == "ND_m150") %>%
@@ -117,14 +117,14 @@ df$parameter <- gsub("δ₁", "δ1", df$parameter)
 
 estimator_labels <- c(
   "CNN" = expression(widehat(bold(theta))["CNN"]),
-  "FCregular" = expression(widehat(bold(theta))["DNN: regular"]),
-  "FCirregular" = expression(widehat(bold(theta))["DNN: irregular"])
+  "DNNregular" = expression(widehat(bold(theta))["DNN: regular"]),
+  "DNNirregular" = expression(widehat(bold(theta))["DNN: irregular"])
 )
 
 estimator_colours <- c(
   "CNN" = "orange",
-  "FCregular" = "#440154FF",
-  "FCirregular" = "#21908CFF"
+  "DNNregular" = "#440154FF",
+  "DNNirregular" = "#21908CFF"
 )
 
 x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
@@ -159,7 +159,7 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
 
 # ---- Variable sample size (regular data only) ----
 
-df <- lapply(c("CNN", "FCregular"), function(x) {
+df <- lapply(c("CNN", "DNNregular"), function(x) {
   str_interp("intermediates/RedSea/${x}/Estimates/merged_test.csv") %>%
     read.csv  %>%
     filter(estimator == "ND_m150") %>%
@@ -171,19 +171,19 @@ df$parameter <- gsub("δ₁", "δ1", df$parameter)
 
 estimator_labels <- c(
   "CNN" = expression(widehat(bold(theta))["CNN"]),
-  "FCregular" = expression(widehat(bold(theta))["DNN: regular"])
+  "DNNregular" = expression(widehat(bold(theta))["DNN: regular"])
 )
 
 estimator_colours <- c(
   "CNN" = "orange",
-  "FCregular" = "#440154FF"
+  "DNNregular" = "#440154FF"
 )
 
 x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
-  
+
   # Omit very small sample sizes
   df <- filter(df, m >= 10)
-  
+
   gg <- df %>%
     diagnosticplot(param_labels, loss = eval(parse(text = loss))) +
     theme(
@@ -191,16 +191,16 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
       axis.title = element_text(size = 17),
       axis.text = element_text(size = 15)
     )
-  
+
   gg$facet$params$nrow <- 2
-  
+
   # Change elements of the plots to make it easier to read
   gg <- gg +
     theme(strip.text = element_text(size = 17),
           axis.text = element_text(size = 12),
           axis.title = element_text(size = 17),
           legend.key.height = unit(1, "cm"))
-  
+
   ggsave(
     gg, width = 12, height = 6, device = "pdf", path = "img/RedSea/",
     file = paste0(loss, "_vs_m_regularOnly.pdf"),

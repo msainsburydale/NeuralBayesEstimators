@@ -4,7 +4,7 @@ option_list = list(
   make_option(c("-d", "--data_type"), type="character", default=NULL,
               help="regular or irregular data?", metavar="character"),
   make_option(c("-n", "--arch"), type="character", default=NULL,
-              help="Fully-connected ('FC') or Convolutional Neural Network ('CNN').", metavar="character")
+              help="Fully-connected ('DNN') or Convolutional Neural Network ('CNN').", metavar="character")
 )
 
 opt_parser <- OptionParser(option_list=option_list)
@@ -29,7 +29,7 @@ source("src/PlottingFunctions.R")
 
 # If we're using a fully-connected arch, the data could be regular or irregular,
 # and the folder names reflect this.
-if(arch == "FC") arch = paste0(arch, data_type)
+if(arch == "DNN") arch = paste0(arch, data_type)
 
 intermediates_path  <- paste0("intermediates/RedSea/", arch, "/")
 estimates_path      <- paste0(intermediates_path, "Estimates/")

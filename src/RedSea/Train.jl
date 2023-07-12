@@ -2,7 +2,7 @@ using ArgParse
 arg_table = ArgParseSettings()
 @add_arg_table arg_table begin
 	"--arch"
-		  help = "The architecture; 'CNN' or 'FC'"
+		  help = "The architecture; 'CNN' or 'DNN'"
 		  arg_type = String
 		  required = true
       "--data_type"
@@ -17,12 +17,12 @@ parsed_args = parse_args(arg_table)
 data_type = parsed_args["data_type"]
 quick     = parsed_args["quick"]
 arch      = parsed_args["arch"]
-@assert arch ∈ ("CNN", "FC")
+@assert arch ∈ ("CNN", "DNN")
 @assert !(data_type == "irregular" && arch == "CNN") "CNN cannot be used with irregular data"
 @info "Red Sea study: $arch architecture for $data_type data"
 
 intermediates_path = "intermediates/RedSea/$arch"
-if arch == "FC" intermediates_path = "intermediates/RedSea/FC" * data_type end
+if arch == "DNN" intermediates_path = "intermediates/RedSea/DNN" * data_type end
 if !isdir(intermediates_path) mkpath(intermediates_path) end
 
 using NeuralEstimators
@@ -43,7 +43,7 @@ params_path = joinpath(pwd(), "intermediates/RedSea/" * data_type * "/parameter_
 θ_val   = Parameters(params_path * "val_", data_type, J = 10)
 
 seed!(1)
-if arch == "FC"
+if arch == "DNN"
 	ψ, ϕ = architecture(ξ.n, ξ.p)
 elseif arch == "CNN"
 	ψ, ϕ = architecture(ξ.p)

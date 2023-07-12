@@ -9,6 +9,7 @@
 "ggOceanMapsData" "1.3"
 "ggplot2" "3.3.5"
 "ggpubr" "0.3.0"
+"ggspatial" "1.1.8"
 "gridExtra" "2.3"
 "ismev" "1.42"
 "KScorrect" "1.4.0"

@@ -2,7 +2,7 @@ using ArgParse
 arg_table = ArgParseSettings()
 @add_arg_table arg_table begin
 	"--arch"
-		  help = "The architecture; 'CNN' or 'FC'"
+		  help = "The architecture; 'CNN' or 'DNN'"
 		  arg_type = String
 		  required = true
       "--data_type"
@@ -13,11 +13,11 @@ end
 parsed_args = parse_args(arg_table)
 data_type = parsed_args["data_type"]
 arch      = parsed_args["arch"]
-@assert arch ∈ ("CNN", "FC")
+@assert arch ∈ ("CNN", "DNN")
 @assert !(data_type == "irregular" && arch == "CNN") "CNN cannot be used with irregular data"
 
 intermediates_path = "intermediates/RedSea/$arch"
-if arch == "FC" intermediates_path = "intermediates/RedSea/FC" * data_type end
+if arch == "DNN" intermediates_path = "intermediates/RedSea/DNN" * data_type end
 
 using SpatialDeepSets
 using Distances: pairwise, Euclidean
@@ -45,7 +45,7 @@ if !isdir(savepath) mkdir(savepath) end
 
 if arch == "CNN"
 	NNs = loadneuralestimators(joinpath(pwd(), relative_loadpath), architecture, ξ.p)
-elseif arch == "FC"
+elseif arch == "DNN"
 	NNs = loadneuralestimators(joinpath(pwd(), relative_loadpath), architecture, ξ.p, ξ.n)
 end
 networks = NNs.estimators
@@ -75,7 +75,7 @@ Z_RedSea = loadwithoutdict(data_path * "extreme_data_subset_LaplaceScale.rda", "
 Z_RedSea = Float32.(Z_RedSea)
 Z_RedSea = cbrt.(Z_RedSea) # variance stablising transformation
 
-if arch == "FC"
+if arch == "DNN"
 	Z_RedSea = reshape(Z_RedSea, size(Z_RedSea, 1), 1, size(Z_RedSea, 2))
 elseif arch == "CNN"
 	# Pad the grid with zeros, so that it can be processed by the CNN
@@ -126,7 +126,7 @@ CSV.write(joinpath(savepath, "bootstrap_time_nonparametric.csv"), Tables.table([
 
 Z̃ = simulate(θ̃_params, ξ, B₂)
 Z̃ = broadcast.(ξ.invtransform, Z̃)
-if arch == "FC"
+if arch == "DNN"
 	Z̃ = dropdims.(Z̃, dims = 2)
 	π̃ = bootstrap_threshold_exceedances(Z̃, region, u)
 elseif arch == "CNN"
