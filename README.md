@@ -1,12 +1,12 @@
 # Source code for "Likelihood-Free Parameter Estimation with Neural Bayes Estimators"
 
-This repository contains the source code for reproducing the results in "Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2022). An arXiv pre-print is available [here](https://arxiv.org/abs/2208.12942).
+This repository contains code for reproducing the results in ["Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2022)](https://arxiv.org/abs/2208.12942).
 
 The methodology described in the manuscript has been developed into a user-friendly and well-documented `Julia` package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [`R` interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.  
 
 ## Repository structure
 
-We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). Each folder is then further divided into the following tree structure, where each branch is associated with one component of the manuscript:
+We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`), results (`results`), and controlling shell scripts that weave everything together (`sh`). Each folder is further divided into the following tree structure, where each branch is associated with one component of the manuscript:
 
 ```bash
 ├── Univariate          (Section 2)
@@ -19,7 +19,7 @@ We first briefly describe the repository structure, although an understanding of
 ├── SimulationOnTheFly  (Section S4 of the Supplementary Material)
 ```
 
-Further details are given in `src/README.md`.
+Further details are given in [`src/README.md`](https://github.com/msainsburydale/NeuralBayesEstimators/tree/master/src).
 
 ## Instructions
 
@@ -27,26 +27,27 @@ First, download this repository and navigate to its top-level directory within t
 
 ### Data
 
-The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data is not downloading as expected, please download it from [here](https://zenodo.org/record/8134200).
-<!-- [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) and place it into the folder `data/RedSea`.  (To download the file, click "Explore" > "Go to resource".) -->
+The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data are not downloading as expected, please download them from [here](https://zenodo.org/record/8134200) and place them into the folder `data/RedSea`.
+<!-- [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) (to download the file, click "Explore" > "Go to resource") and place them into the folder `data/RedSea`. -->
 
-Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if this file is not present.
+
+Note that checks at the beginning of the replication script will immediately notify the user if these data are not present.
 
 ### Software dependencies
 
-Before installing the software dependencies, users may wish to setup a `conda` environment, so that the dependencies of this repo do not affect the users current installation. To create a `conda` environment, run the following command at the terminal:
+Before installing the software dependencies, users may wish to setup a `conda` environment, so that the dependencies of this repository do not affect the users current installation. To create a `conda` environment, run the following command in terminal:
 
 ```
 conda create -n NeuralBayesEstimators -c conda-forge julia=1.7.1 r-base nlopt
 ```
 
-Then, to activate the `conda` environment, run:
+Then activate the `conda` environment with:
 
 ```
 conda activate NeuralBayesEstimators
 ```
 
-The above `conda` environment installs `Julia` and `R` automatically; if you do not wish to use a `conda` environment, you will need to install these manually if they are not already on your system:  
+The above `conda` environment installs `Julia` and `R` automatically. If you do not wish to use a `conda` environment, you will need to install `Julia` and `R` manually if they are not already on your system:  
 
 - Install `Julia` 1.7.1. (See [here](https://julialang.org/downloads/).)
   - Ensure that your system can find the `julia` executable (this usually needs to be done manually; see, e.g., [here](https://julialang.org/downloads/platform/#linux_and_freebsd)) by entering `julia` in terminal, which should open the Julia REPL (run `exit()` to leave the REPL).
@@ -56,14 +57,14 @@ Once `Julia` and `R` are setup, install package dependencies as follows:
 
 - In terminal, navigate (i.e., `cd`) to the top level of this repository, and enter:
   - `julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'`. This will install all `Julia` package dependencies given in `Project.toml` and `Manifest.toml`.
-  - `Rscript Dependencies.R`. This will install all `R` package dependencies given in `Dependencies.txt`. 
+  - `Rscript Dependencies.R`. This will install all `R` package dependencies given in `Dependencies.txt`.
 
 
 ### Hardware requirements
 
-The fast construction of neural Bayes estimators requires graphical processing units (GPUs). Hence, although the code in this repo will run without a GPU, it is recommended that the user run this code on a workstation with a reasonably powerful GPU. Note that running the "quick" version of the code (see below) is still fast even on the CPU, and so the code can be tested without the need of a GPU.
+The fast construction of neural Bayes estimators requires graphical processing units (GPUs). Hence, although the code in this repository will run without a GPU (i.e., it will run on the CPU), we recommend that the user run this code on a workstation with a GPU. Note that running the "quick" version of the code (see below) is still fast even on the CPU, so the code can still be tested without a GPU.
 
-The Red-Sea application study of Section 4 is memory intensive; you will need at least 128GB of of CPU RAM (or RAM + swap) to run the full (i.e., non "quick") version of this study. If this is an issue, please comment out the line containing `bash sh/RedSea.sh` in the replication script, `sh/all.sh`. (Comments in `.sh` files are made with `#`.)
+The Red-Sea application study of Section 4 is memory intensive; at least 128GB of of CPU RAM (or RAM + swap) is needed to run the full (i.e., non "quick") version of this study. If this is an issue, please comment out the line containing `bash sh/RedSea.sh` in the replication script, `sh/all.sh`. (Comments in `.sh` files are made with `#`.)
 
 ### Reproducing the results
 
