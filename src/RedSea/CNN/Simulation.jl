@@ -44,7 +44,7 @@ function simulatedataframe(params::Parameters, ξ)
 	y = repeat(y, outer = K)
 
 	for i ∈ 1:n_fields
-		Z  = simulate(params, ξ)
+		Z  = simulate(params)
 		Z  = vcat([vec(Z[:, :, 1, j][ξ.data_idx]) for j ∈ 1:K]...)
 		df = DataFrame(Z = Z, scenario = scenario, replicate = i, x = x, y = y)
 		append!(fields_df, df)

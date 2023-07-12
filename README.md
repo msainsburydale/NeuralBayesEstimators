@@ -6,7 +6,7 @@ The methodology described in the manuscript has been developed into a user-frien
 
 ## Repository structure
 
-We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). Each folder is then further divided into the following tree structure, where each branch is associated with one component of the manuscript: 
+We first briefly describe the repository structure, although an understanding of this structure is not needed for reproducing the results of the manuscript. The repository is organised into folders containing source code (`src`), intermediate objects generated from the source code (`intermediates`), figures (`img`) and results (`results`), and controlling shell scripts that weave everything together (`sh`). Each folder is then further divided into the following tree structure, where each branch is associated with one component of the manuscript:
 
 ```bash
 ├── Univariate          (Section 2)
@@ -46,17 +46,17 @@ Then, to activate the `conda` environment, run:
 conda activate NeuralBayesEstimators
 ```
 
-The above `conda` environment installs `julia` and `R` automatically; if you do not wish to use a `conda` environment, you will need to install these manually if they are not already on your system:  
+The above `conda` environment installs `Julia` and `R` automatically; if you do not wish to use a `conda` environment, you will need to install these manually if they are not already on your system:  
 
-- Install Julia 1.7.1. (See [here](https://julialang.org/downloads/).)
+- Install `Julia` 1.7.1. (See [here](https://julialang.org/downloads/).)
   - Ensure that your system can find the `julia` executable (this usually needs to be done manually; see, e.g., [here](https://julialang.org/downloads/platform/#linux_and_freebsd)) by entering `julia` in terminal, which should open the Julia REPL (run `exit()` to leave the REPL).
 - Install R >= 4.0.0. (See [here](https://www.r-project.org/).)
 
-Once `julia` and `R` are setup, install package dependencies as follows:
+Once `Julia` and `R` are setup, install package dependencies as follows:
 
 - In terminal, navigate (i.e., `cd`) to the top level of this repository, and enter:
-  - `julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'`. This will install all Julia package dependencies given in the files `Project.toml` and `Manifest.toml`.
-  - `Rscript Dependencies.R`. This will install all R package dependencies given in `Dependencies.txt`. The user will be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`; this option is only recommended if there is a problem with the latest version of the packages.
+  - `julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'`. This will install all `Julia` package dependencies given in `Project.toml` and `Manifest.toml`.
+  - `Rscript Dependencies.R`. This will install all `R` package dependencies given in `Dependencies.txt`. 
 
 
 ### Hardware requirements

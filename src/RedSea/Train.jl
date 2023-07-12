@@ -75,6 +75,7 @@ for i ∈ eachindex(m)
 	global θ̂ = train(
 		  θ̂, θ_train, θ_val, Z_train, subsetdata(Z_val, 1:mᵢ), batchsize = batchsize[i],
 		  savepath = "$intermediates_path/runs_ND_" * "m$(mᵢ)",
+		  epochs = quick ? 5 : 300,
 		  stopping_epochs = mᵢ == 1 ? 10 : 4
 	)
 end

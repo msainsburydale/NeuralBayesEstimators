@@ -114,8 +114,8 @@ include(joinpath(pwd(), "src/RedSea/Bootstrap.jl"))
 
 # Bootstrap samples of θ̂ (non-parametric)
 blocks = loadwithoutdict(joinpath(pwd(), "data/RedSea/" * data_type * "/blocks.rda"), "blocks")
-nonparametricbootstrap(net, Z_RedSea, blocks, B = 10) # one run to compile the function
-t = @elapsed θ̃ = nonparametricbootstrap(net, Z_RedSea, blocks, B = B)
+bootstrap(net, Z_RedSea, blocks = blocks, B = 10) # one run to compile the function
+t = @elapsed θ̃ = bootstrap(net, Z_RedSea, blocks = blocks, B = B)
 θ̃ = θ̃ |> cpu
 CSV.write(joinpath(savepath, "bootstrap_samples_nonparametric.csv"), DataFrame(θ̃', parameter_names))
 CSV.write(joinpath(savepath, "bootstrap_time_nonparametric.csv"), Tables.table([t]), header=false)

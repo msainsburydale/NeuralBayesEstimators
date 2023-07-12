@@ -332,7 +332,7 @@ s0_df <- data.frame(lon = s0[1, 1], lat = s0[1, 2])
 # Load the regions and find which index corresponds to s0:
 load(paste0(data_path, "region.rda"))
 num_regions <- length(levels(region))
-cat("Red Sea threshold exceedances - Number of points within each region:", table(region), "\n")
+# cat("Red Sea threshold exceedances - Number of points within each region:", table(region), "\n")
 
 # Plot the regions:
 region_df <- as.data.frame(cbind(S, region = region))
