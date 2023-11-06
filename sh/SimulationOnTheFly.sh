@@ -1,4 +1,5 @@
 #!/bin/bash
+unset R_HOME
 
 set -e
 

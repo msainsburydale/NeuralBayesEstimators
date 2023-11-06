@@ -1,6 +1,6 @@
 # Source code for "Likelihood-Free Parameter Estimation with Neural Bayes Estimators"
 
-This repository contains code for reproducing the results in ["Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2022)](https://arxiv.org/abs/2208.12942).
+This repository contains code for reproducing the results in ["Likelihood-Free Parameter Estimation with Neural Bayes Estimators" (Sainsbury-Dale, Zammit-Mangion, and Huser, 2023)](https://doi.org/10.1080/00031305.2023.2249522).
 
 The methodology described in the manuscript has been developed into a user-friendly and well-documented Julia package, [NeuralEstimators.jl](https://github.com/msainsburydale/NeuralEstimators.jl), with an accompanying [R interface](https://github.com/msainsburydale/NeuralEstimators). The code in this repository is made available primarily for reproducibility purposes, and we encourage readers seeking to implement neural Bayes estimators to explore the package and its documentation.  
 
@@ -29,7 +29,6 @@ First, download this repository and navigate to its top-level directory within t
 
 The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data are not downloading as expected, please download them from [here](https://zenodo.org/record/8134200) and place them into the folder `data/RedSea`.
 <!-- [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) (to download the file, click "Explore" > "Go to resource") and place them into the folder `data/RedSea`. -->
-
 
 Note that checks at the beginning of the replication script will immediately notify the user if these data are not present.
 
