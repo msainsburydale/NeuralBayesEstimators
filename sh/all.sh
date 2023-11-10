@@ -14,10 +14,6 @@ then
     exit 1
 fi
 
-# Install R dependencies
-Rscript Dependencies.R
-
-
 # Should we do a "quick" run through to check that things are working?
 echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n) "
 read quick_str

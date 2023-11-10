@@ -15,9 +15,9 @@ using CSV
 using Random: seed!
 using Flux
 
-model = "GaussianProcess/nuFixed"
-include(joinpath(pwd(), "src/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/$model/Simulation.jl"))
+model = joinpath("GaussianProcess", "nuFixed")
+include(joinpath(pwd(), "src", model, "Parameters.jl"))
+include(joinpath(pwd(), "src", model, "Simulation.jl"))
 
 epochs = quick ? 10 : 150
 
@@ -100,7 +100,7 @@ for arch_name ∈ keys(architectures)
 		      θ̂, θ_train, θ_val, simulate, m = m,
 		      epochs_per_Z_refresh = epochs_per_Z_refreshes[epochs_per_Z_refresh_name],
 		      epochs = epochs, batchsize = 256, stopping_epochs = epochs, # no early stopping
-		      savepath = "intermediates/SimulationOnTheFly/$arch_name/$epochs_per_Z_refresh_name/runs_N1"
+		      savepath = joinpath("intermediates", "SimulationOnTheFly", "$arch_name", "$epochs_per_Z_refresh_name", "runs_N1")
 		)
 	end
 end
@@ -119,6 +119,6 @@ for arch_name ∈ keys(architectures)
 	θ̂ = train(
 	      θ̂, θ_train, θ_val, Z_train, Z_val,
 	      epochs = epochs, batchsize = 256, stopping_epochs = epochs, # no early stopping
-	      savepath = "intermediates/SimulationOnTheFly/$arch_name/recycled/runs_N1"
+	      savepath = joinpath("intermediates", "SimulationOnTheFly", "$arch_name", "recycled", "runs_N1")
 	)
 end

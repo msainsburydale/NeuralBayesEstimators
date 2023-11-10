@@ -25,17 +25,16 @@ library("stringr") # str_interp for string interpolation
 # library("ggOceanMaps")
 options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 })
-source("src/PlottingFunctions.R")
+source(file.path("src", "PlottingFunctions.R"))
 
 # If we're using a fully-connected arch, the data could be regular or irregular,
 # and the folder names reflect this.
 if(arch == "DNN") arch = paste0(arch, data_type)
 
-intermediates_path  <- paste0("intermediates/RedSea/", arch, "/")
-estimates_path      <- paste0(intermediates_path, "Estimates/")
-img_path            <- paste0("img/RedSea/", arch)
-data_path           <- paste0("data/RedSea/", data_type, "/")
-results_path        <- paste0("results/RedSea/", arch, "/")
+estimates_path      <- file.path("intermediates", "RedSea", arch, "Estimates")
+img_path            <- file.path("img", "RedSea", arch)
+data_path           <- file.path("data", "RedSea", data_type)
+results_path        <- file.path("results", "RedSea", arch)
 dir.create(results_path, showWarnings = FALSE, recursive = TRUE)
 dir.create(img_path,     showWarnings = FALSE, recursive = TRUE)
 
@@ -85,13 +84,13 @@ renamedelta <- function(df) {
 
 caption <- "Parameter estimates and confidence intervals for the Red Sea data set."
 
-theta_hat <- estimates_path %>% paste0("real_data_estimates.csv") %>% read.csv %>% renamedelta
+theta_hat <- file.path(estimates_path, "real_data_estimates.csv") %>% read.csv %>% renamedelta
 rownames(theta_hat) <- "Estimate"
 
-theta_tilde <- estimates_path %>% paste0("bootstrap_samples_nonparametric.csv") %>% read.csv %>% renamedelta
+theta_tilde <- file.path(estimates_path, "bootstrap_samples_nonparametric.csv") %>% read.csv %>% renamedelta
 CI <- apply(theta_tilde, 2, function(x) quantile(x, c(alpha/2, 1 - alpha/2)))
 write.csv(CI, paste0(results_path, "confidence_interval_nonparametric.csv"))
-CI_time <- estimates_path %>% paste0("bootstrap_time_nonparametric.csv") %>% read.csv(header = FALSE)
+CI_time <- file.path(estimates_path, "bootstrap_time_nonparametric.csv") %>% read.csv(header = FALSE)
 theta_hat %>%
   rbind(CI) %>%
   xtable(type = "latex",
@@ -101,8 +100,8 @@ theta_hat %>%
 # ---- Variable sample size ----
 
 # Load in estimates + true parameters
-df     <- estimates_path %>% paste0("merged_test.csv") %>% read.csv
-likelihood_path <- paste0(estimates_path, "merged_likelihood_test.csv")
+df     <- file.path(estimates_path, "merged_test.csv") %>% read.csv
+likelihood_path <- file.path(estimates_path, "merged_likelihood_test.csv")
 if (file.exists(likelihood_path)) df <- rbind(df, read.csv(likelihood_path))
 df$parameter <- gsub("δ₁", "δ1", df$parameter)
 
@@ -135,13 +134,13 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
 # ---- Joint distribution of the estimators ----
 
 # Load in estimates + true parameters
-df     <- estimates_path %>% paste0("merged_scenarios.csv") %>% read.csv
-likelihood_path <- paste0(estimates_path, "merged_likelihood_scenarios.csv")
+df     <- file.path(estimates_path, "merged_scenarios.csv") %>% read.csv
+likelihood_path <- file.path(estimates_path, "merged_likelihood_scenarios.csv")
 if (file.exists(likelihood_path)) df <- rbind(df, read.csv(likelihood_path))
 df$parameter <- gsub("δ₁", "δ1", df$parameter)
 
 # Load model realisations
-fields <- paste0(estimates_path, "fields_scenarios.csv") %>% read.csv
+fields <- file.path(estimates_path, "fields_scenarios.csv") %>% read.csv
 fields$Z <- fields$Z^3 # FIXME better to do this in Julia
 
 # Sanity check:
@@ -220,14 +219,14 @@ plotlist <- lapply(all_m, function(j) {
 
     plotlist  <- c(plotlist, fieldplots)
 
-    # Add a column/row to the layout that will store the scatterplot legend
+    # Add a column+row to the layout that will store the scatterplot legend
     legend_part <- rep(NA, n_params)
     legend_part[floor(n_params / 2)] <- n_params^2 + 1
     if (n_params %% 2 == 0) legend_part[floor(n_params / 2) + 1] <- n_params^2 + 1
     layout <- cbind(legend_part, layout)
     plotlist <- c(plotlist, list(scatterplot_legend.grob))
 
-    # Add a column/row to the layout that will store the data legend
+    # Add a column+row to the layout that will store the data legend
     legend_part <- rep(NA, n_params)
     legend_part[floor(n_params / 2)] <- n_params^2 + 2
     if (n_params %% 2 == 0) legend_part[floor(n_params / 2) + 1] <- n_params^2 + 2
@@ -247,18 +246,18 @@ plotlist <- lapply(all_m, function(j) {
 
 # ---- Observed fields vs. Simulations from the fitted model ----
 
-load(paste0(data_path, "S.rda"))
+load(file.path(data_path, "S.rda"))
 n_plots <- 4
 
 # Simulations from the fitted model:
-fields   <- paste0(estimates_path, "fitted_model_simulations.csv") %>% read.csv
+fields   <- file.path(estimates_path, "fitted_model_simulations.csv") %>% read.csv
 fields   <- rename(fields, lon = x, lat = y)
 fields   <- fields %>% filter(replicate <= n_plots)
 fields$scenario <- NULL
 fields$Z <- fields$Z^3 # FIXME better to do this in Julia
 
 # Observed fields:
-load(paste0(data_path, "extreme_data_subset_LaplaceScale.rda"))
+load(file.path(data_path, "extreme_data_subset_LaplaceScale.rda"))
 n <- nrow(extreme_data_L)
 n_fields <- ncol(extreme_data_L)
 plot_idx <- sample(1:n_fields, n_plots)
@@ -325,12 +324,12 @@ ggsave(figure,
 # This diagnostic plot considers the spatial distance between each observation
 # location and s0; hence, we need the matrix of spatial locations, S, and the
 # location of the conditioning site, s0.
-load(paste0(data_path, "S.rda"))
-load(paste0(data_path, "s0.rda"))
+load(file.path(data_path, "S.rda"))
+load(file.path(data_path, "s0.rda"))
 s0_df <- data.frame(lon = s0[1, 1], lat = s0[1, 2])
 
 # Load the regions and find which index corresponds to s0:
-load(paste0(data_path, "region.rda"))
+load(file.path(data_path, "region.rda"))
 num_regions <- length(levels(region))
 # cat("Red Sea threshold exceedances - Number of points within each region:", table(region), "\n")
 
@@ -365,8 +364,8 @@ p1 <- p1 +
 
 # ---- Threshold exceedances ----
 
-empirical_exceedances_bootstrap <- paste0("intermediates/RedSea/", data_type, "/empirical_exceedances_bootstrap.csv") %>% read.csv
-model_exceedances_bootstrap <- paste0(estimates_path, "threshold_bootstrap_samples_nonparametric.csv") %>% read.csv
+empirical_exceedances_bootstrap <- file.path("intermediates", "RedSea", data_type, "empirical_exceedances_bootstrap.csv") %>% read.csv
+model_exceedances_bootstrap <- file.path(estimates_path, "threshold_bootstrap_samples_nonparametric.csv") %>% read.csv
 
 # Compute summary statistics (mean, quantile) of threshold exceedance proportions
 summarise_prop <- function(df) {

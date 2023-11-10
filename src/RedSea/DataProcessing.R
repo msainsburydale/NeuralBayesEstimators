@@ -53,7 +53,7 @@ laplaceMargins <- function(univariateData, thrQ = 0.95){
 choose_s0 <- function(S, path) {
 
   # Save the locations as a separate matrix:
-  save(file = paste0(path, "/S.rda"), S)
+  save(file = file.path(path, "S.rda"), S)
 
   # Save the conditioning site, s0, here chosen to lie roughly in the centre of
   # the spatial domain:
@@ -61,13 +61,13 @@ choose_s0 <- function(S, path) {
   s0 <- matrix(s0, nrow = 1)
   # s0 as defined above does not necessarily correspond to an exact location in
   # the data set. Here, we find the location that is as close as possible to the
-  # average lon/lat point.
+  # average lon-lat point.
   H <- apply(S, 1, function(s) s - s0)
   H_norm <- apply(H, 2, function(h) sqrt(sum(h^2)))
   s0_idx <- which.min(H_norm)
   s0 <- S[s0_idx, ]
   s0 <- matrix(s0, nrow = 1)
-  save(file = paste0(path, "/s0.rda"), s0)
+  save(file = file.path(path, "s0.rda"), s0)
 
   ## Move s0 to the global environment for access in later functions
   s0_idx <<- s0_idx
@@ -82,7 +82,7 @@ find_extreme_fields <- function(data_L, s0_idx, path) {
   # First, define the threshold, u, for an observation to be considered extreme.
   # Here, we set u to be a quantile of the standard Laplace distribution:
   u <- standard_Laplace_quantile(0.95)
-  save(file = paste0(path, "/u.rda"), u)
+  save(file = file.path(path, "u.rda"), u)
 
   # Find the indices of the extreme observations:
   s0_data <- data_L[, s0_idx]
@@ -98,8 +98,8 @@ find_extreme_fields <- function(data_L, s0_idx, path) {
   extreme_data_L <- t(extreme_data_L) # transpose so that it's in the correct format
   m_e <- ncol(extreme_data_L)
   cat("Number of spatial fields available with Z(s0) > u:", m_e, "\n")
-  save(file = paste0(path, "/extreme_data_subset_LaplaceScale.rda"), extreme_data_L)
-  save(file = paste0(path, "/m_e.rda"), m_e)
+  save(file = file.path(path, "extreme_data_subset_LaplaceScale.rda"), extreme_data_L)
+  save(file = file.path(path, "m_e.rda"), m_e)
 
   # Plot fields in the year 2015 to show temporal dependence
   time_ext <- time[extreme_idx]
@@ -154,17 +154,17 @@ find_extreme_fields <- function(data_L, s0_idx, path) {
     b <- unique(blocks)[i]
     i * (blocks == b)
   }), 1, sum)
-  save(file = paste0(path, "/blocks.rda"), blocks)
+  save(file = file.path(path, "blocks.rda"), blocks)
 
   # Define and save the regions used for threshold exceedances:
   H <- apply(S, 1, function(s) s - s0)
   H_norm <- apply(H, 2, function(h) sqrt(sum(h^2)))
   num_regions <- 17
   region <- cut(H_norm, num_regions)
-  save(file = paste0(path, "/region.rda"), region)
+  save(file = file.path(path, "region.rda"), region)
   region_id <- factor(region, labels = 1:num_regions)
   region_id <- as.numeric(region_id)
-  save(file = paste0(path, "/region_id.rda"), region_id)
+  save(file = file.path(path, "region_id.rda"), region_id)
 
   return(extreme_data_L)
 }
@@ -223,7 +223,7 @@ plot_data <- function(
 
 # See this link for a description of this data set and the objects it contains:
 # https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature
-load("data/RedSea/redseatemperature.rdata")
+load(file.path("data", "RedSea", "redseatemperature.rdata"))
 
 ## Extract observations from the Summer (July, August, September):
 summer_months <- month %in% c(7,8,9)
@@ -246,7 +246,7 @@ figure <- ggplot() +
   geom_point(aes(x = loc[, "lon"], y = loc[, "lat"]), size = 0.3) +
   labs(x = "Longitude", y = "Latitude") +
   theme_bw() + coord_fixed()
-img_path <- "img/RedSea"
+img_path <- file.path("img", "RedSea")
 dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 ggsave(figure,
        file = "full_data.pdf", device = "pdf",
@@ -260,10 +260,10 @@ full_loc  <- loc
 # ---- Irregular subset of data ----
 
 data_type <- "irregular"
-path <- paste0("data/RedSea/", data_type)
+path <- file.path("data", "RedSea", data_type)
 dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
-img_path <- paste0("img/RedSea/", data_type)
+img_path <- file.path(img_path, data_type)
 dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 
 ## Subset the data: Randomly select 678 locations
@@ -277,8 +277,8 @@ cat("Number of observations in the irregular Red Sea data set:", length(idx))
 suppressWarnings(data_L <- apply(data, 2, laplaceMargins))
 
 ## Save new datasets:
-save(data, loc, file = paste0(path, "/data_subset_OriginalScale.RData"))
-save(data_L, loc, file = paste0(path, "/data_subset_LaplaceScale.RData"))
+save(data,   loc, file = file.path(path, "data_subset_OriginalScale.RData"))
+save(data_L, loc, file = file.path(path, "data_subset_LaplaceScale.RData"))
 
 ## Choose the conditioning site
 S <- loc
@@ -286,7 +286,7 @@ s0 <- choose_s0(S, path)
 
 # Save the distance matrix
 D <- fields::rdist(S)
-save(file = paste0(path, "/D.rda"), D)
+save(file = file.path(path, "D.rda"), D)
 
 ## Find the extreme data
 extreme_data_L <- find_extreme_fields(data_L, s0_idx, path)
@@ -301,10 +301,10 @@ plot_data(extreme_data_L, S, img_path = img_path, type = "least_extreme", geom =
 # ---- Regular subset of data ----
 
 data_type <- "regular"
-path <- paste0("./data/RedSea/", data_type)
+path <- file.path("data", "RedSea", data_type)
 dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
-img_path <- paste0("img/RedSea/", data_type)
+img_path <- file.path(img_path, data_type)
 dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 
 ## Subset the spatial locations to every third longitude and latitude value:
@@ -326,8 +326,8 @@ cat("Number of locations in each field in the (regular) Red Sea data set:", leng
 suppressWarnings(data_L <- apply(data, 2, laplaceMargins))
 
 ## Save new data sets:
-save(data, loc, file = paste0(path, "/data_subset_OriginalScale.RData"))
-save(data_L, loc, file = paste0(path, "/data_subset_LaplaceScale.RData"))
+save(data, loc,   file = file.path(path, "data_subset_OriginalScale.RData"))
+save(data_L, loc, file = file.path(path, "data_subset_LaplaceScale.RData"))
 
 ## Choose the conditioning site
 S <- loc
@@ -335,7 +335,7 @@ s0 <- choose_s0(S, path)
 
 # Save the distance matrix
 D <- fields::rdist(S)
-save(file = paste0(path, "/D.rda"), D)
+save(file = file.path(path, "D.rda"), D)
 
 ## Find the extreme data
 extreme_data_L <- find_extreme_fields(data_L, s0_idx, path)
@@ -356,8 +356,8 @@ full_grid <- expand.grid(lat = sort(lat_values, decreasing = TRUE), lon = lon_va
 # Save the width and height of the full grid
 height <- length(lat_values)
 width <- length(lon_values)
-save(file = paste0(path, "/height.rda"), height)
-save(file = paste0(path, "/width.rda"), width)
+save(file = file.path(path, "height.rda"), height)
+save(file = file.path(path, "width.rda"), width)
 
 # Linear index of the full grid, respecting the column major ordering of Julia:
 # See https://docs.julialang.org/en/v1/manual/arrays/
@@ -368,8 +368,8 @@ save(file = paste0(path, "/width.rda"), width)
 whichRowMatch <- function(M, v) which(apply(M, 1, function(row) all(row == v)))
 data_idx <- apply(loc[, c("lat", "lon")], 1, function(v) whichRowMatch(full_grid, v))
 pad_idx  <- (1:nrow(full_grid))[-data_idx]
-save(file = paste0(path, "/data_idx.rda"), data_idx)
-save(file = paste0(path, "/pad_idx.rda"), pad_idx)
+save(file = file.path(path, "data_idx.rda"), data_idx)
+save(file = file.path(path, "pad_idx.rda"), pad_idx)
 
 ## Plot the data region and the padded region:
 df1 <- full_grid[data_idx, ] %>% mutate(region = "data")

@@ -27,8 +27,8 @@ function Parameters(path::String)
 	# assumes that the last dimension of an array is the observation dimension),
 	# and copy() forces a regular array rather than an object of type Transpose.
 	θ        = loadwithoutdict(path * "xi.rda", "xi") |> transpose |> copy
-	S        = loadwithoutdict(dirname(path) * "/S.rda", "S")
-	D        = loadwithoutdict(dirname(path) * "/D.rda", "D")
+	S        = loadwithoutdict(joinpath(dirname(path), "S.rda"), "S")
+	D        = loadwithoutdict(joinpath(dirname(path), "D.rda"), "D")
 	chols    = loadwithoutdict(path * "chols.rda", "chols")
 
 	K = size(θ, 2)

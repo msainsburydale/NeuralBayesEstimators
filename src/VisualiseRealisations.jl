@@ -18,12 +18,12 @@ using DataFrames
 using CSV
 using Random: seed!
 
-include(joinpath(pwd(), "src/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/$model/Simulation.jl"))
+include(joinpath(pwd(), "src", model, "Parameters.jl"))
+include(joinpath(pwd(), "src", model, "Simulation.jl"))
 if model == "GaussianProcess/nuFixed"
-	params_path = joinpath(pwd(), "intermediates/GaussianProcess/nuFixed/parameter_configurations/")
-	θ_test      = Parameters(params_path * "test_")
-	θ_scenarios = Parameters(params_path * "scenarios_")
+  params_path = joinpath(pwd(), "intermediates", model, "parameter_configurations")
+	θ_test      = Parameters(joinpath(params_path, "test_"))
+	θ_scenarios = Parameters(joinpath(params_path, "scenarios_"))
 else
 	# Sample randomly from Ω to generate a small set of parameters used for
 	# visualising the joint distributions of the estimators.

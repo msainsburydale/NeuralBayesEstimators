@@ -4,9 +4,9 @@ library("ggplot2")
 library("viridis")
 })
 
-model <- "GaussianProcess/nuFixed"
-params_path <- paste0("intermediates/", model, "/parameter_configurations/")
-img_path    <- paste0("img/", model)
+model    <- file.path("GaussianProcess", "nuFixed")
+params_path <- paste0(file.path("intermediates", model, "parameter_configurations"), .Platform$file.sep)
+img_path    <- file.path("img", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
 
 all_sets <- c("train", "val", "test", "scenarios")

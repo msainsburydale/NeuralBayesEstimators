@@ -27,16 +27,16 @@ echo "######## Starting application study for the Red Sea data set ############"
 echo ""
 
 # Data processing and defining the set of parameter configurations
-Rscript src/RedSea/DataProcessing.R --plot
-Rscript src/RedSea/Parameters.R $quick
+# Rscript src/RedSea/DataProcessing.R --plot
+# Rscript src/RedSea/Parameters.R $quick
 
 # Empirical Bootstrap
-julia --threads=auto --project=. src/RedSea/EmpiricalEstimatorBootstrap.jl
+# julia --threads=auto --project=. src/RedSea/EmpiricalEstimatorBootstrap.jl
 
 # Train and estimate with each neural estimator described in the manuscript
-julia --threads=auto --project=. src/RedSea/Train.jl $quick --arch=CNN --data_type=regular
-Rscript src/PlotLoss.R --path=RedSea/CNN
-julia --threads=auto --project=. src/RedSea/Estimate.jl --arch=CNN --data_type=regular
+# julia --threads=auto --project=. src/RedSea/Train.jl $quick --arch=CNN --data_type=regular
+# Rscript src/PlotLoss.R --path=RedSea/CNN
+# julia --threads=auto --project=. src/RedSea/Estimate.jl --arch=CNN --data_type=regular
 Rscript src/RedSea/Results.R --arch=CNN --data_type=regular
 
 for datatype in regular irregular

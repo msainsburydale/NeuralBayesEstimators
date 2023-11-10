@@ -9,12 +9,12 @@ suppressMessages({
 })
 
 # Load the loss function per epoch files:
-all_dirs  <- list.dirs(path = paste0("intermediates/", path), recursive = TRUE)
+all_dirs  <- list.dirs(path = file.path("intermediates", path), recursive = TRUE)
 runs_dirs <- all_dirs[which(grepl("runs_", all_dirs))]
 # determine models automatically from runs_dirs (every unique value between "Pretraining/' and "/NotPretrained")
 schemes   <- c("Pretrained", "NotPretrained")
 loss_per_epoch_list <- lapply(schemes, function(scheme) {
-  path <- paste("intermediates", path, scheme, "runs_N30/loss_per_epoch.csv", sep = "/")
+  path <- file.path("intermediates", path, scheme, "runs_N30", "loss_per_epoch.csv")
   loss_per_epoch <- read.csv(path, header = FALSE)
   colnames(loss_per_epoch) <- c("training", "validation")
   loss_per_epoch$epoch <- 0:(nrow(loss_per_epoch) - 1)
@@ -48,7 +48,7 @@ fig <- ggplot(df) +
 
 fig <- fig + coord_cartesian(ylim = c(0.2, 1))
 
-img_path <- paste0("img/", path)
+img_path <- file.path("img", path)
 dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 ggsave(
   fig, width = 6, height = 3.3,

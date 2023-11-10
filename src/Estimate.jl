@@ -27,19 +27,19 @@ using DataFrames
 using CSV
 using Random: seed!
 
-relative_loadpath = "intermediates/$model"
-relative_savepath = "intermediates/$model/Estimates"
+relative_loadpath = joinpath("intermediates", model)
+relative_savepath = joinpath("intermediates", model, "Estimates")
 savepath = joinpath(pwd(), relative_savepath)
 if !isdir(savepath) mkdir(savepath) end
 
-include(joinpath(pwd(), "src/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/$model/Simulation.jl"))
-include(joinpath(pwd(), "src/Architecture.jl"))
+include(joinpath(pwd(), joinpath("src", model, "Parameters.jl")))
+include(joinpath(pwd(), joinpath("src", model, "Simulation.jl")))
+include(joinpath(pwd(), joinpath("src", "Architecture.jl")))
 
 if model == "GaussianProcess/nuFixed"
-	params_path = joinpath(pwd(), "intermediates/GaussianProcess/nuFixed/parameter_configurations/")
-	θ_test      = Parameters(params_path * "test_")
-	θ_scenarios = Parameters(params_path * "scenarios_")
+	params_path = joinpath(pwd(), "intermediates", model, "parameter_configurations")
+	θ_test      = Parameters(joinpath(params_path, "test_"))
+	θ_scenarios = Parameters(joinpath(params_path, "scenarios_"))
 else
 	seed!(1)
 	K = quick ? 10 : 500

@@ -263,9 +263,8 @@ prepare_wrapper <- function(N = 16, S = NULL,
   ## Save objects
   if (!is.null(path)) {
     dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
-    path2 <- paste0(path, "dummy") # just in case path ends in a "/"
-    save(file = paste(dirname(path2), "S.rda", sep = "/"), S)
-    save(file = paste(dirname(path2), "D.rda", sep = "/"), D)
+    save(file = file.path(dirname(path), "S.rda"), S)
+    save(file = file.path(dirname(path), "D.rda"), D)
     save(file = paste0(path, "_chols", ".rda"), chols)
     save(file = paste0(path, "_xi", ".rda"), xi)
     save(file = paste0(path, "_logNuGrid", ".rda"), logNuGrid)

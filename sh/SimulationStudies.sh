@@ -15,7 +15,7 @@ else
     exit 1
 fi
 
-for model in GaussianProcess/nuVaried GaussianProcess/nuFixed Schlather ConditionalExtremes
+for model in GaussianProcess/nuFixed GaussianProcess/nuVaried Schlather ConditionalExtremes
 do
     echo ""
     echo "######## Starting simulation study for $model model ############"

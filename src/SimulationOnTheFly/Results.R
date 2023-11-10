@@ -10,7 +10,7 @@ suppressMessages({
 })
 
 # Load the loss function per epoch files:
-all_dirs  <- list.dirs(path = paste0("intermediates/", path), recursive = TRUE)
+all_dirs  <- list.dirs(path = file.path("intermediates", path), recursive = TRUE)
 runs_dirs <- all_dirs[which(grepl("runs_", all_dirs))]
 networks  <- c("smallNetwork", "largeNetwork")
 schemes   <- c("everyEpoch", "someEpochs", "noEpochs", "recycled")
@@ -18,7 +18,7 @@ loss_per_epoch_list <- expand.grid(networks, schemes) %>%
   apply(1, function(study) {
     network = study[1]
     scheme = study[2]
-    path <- paste("intermediates", path, network, scheme, "runs_N1/loss_per_epoch.csv", sep = "/")
+    path <- file.path("intermediates", path, network, scheme, "runs_N1", "loss_per_epoch.csv")
     loss_per_epoch <- read.csv(path, header = FALSE)
     colnames(loss_per_epoch) <- c("training", "validation")
     loss_per_epoch$epoch <- 0:(nrow(loss_per_epoch) - 1)
@@ -54,7 +54,7 @@ minimum_loss <- df %>% filter(set == "Validation") %>% summarise(min(loss)) %>% 
 
 size <- 0.3 
 
-img_path <- paste0("img/", path)
+img_path <- file.path("img", path)
 dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 
 # Grid of plots
@@ -85,6 +85,6 @@ ggsave(
 #   summarise(min = min(loss)) %>% 
 #   as.data.frame()
 # 
-# results_path <- paste0("results/", path)
+# results_path <- file.path("results", path)
 # dir.create(results_path, showWarnings = FALSE, recursive = TRUE)
-# write.csv(minima, file = paste(results_path, "loss_minima.csv", sep = "/"))
+# write.csv(minima, file = file.path(results_path, "loss_minima.csv"))

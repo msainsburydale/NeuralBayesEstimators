@@ -7,12 +7,13 @@ opt_parser <- OptionParser(option_list = option_list)
 opt   <- parse_args(opt_parser)
 quick <- opt$quick
 
-model    <- "GaussianProcess/nuFixed"
-int_path <- paste0("./intermediates/", model, "/parameter_configurations/")
-img_path <- paste0("img/", model)
+
+model    <- file.path("GaussianProcess", "nuFixed")
+int_path <- file.path("intermediates", model, "parameter_configurations")
+img_path <- file.path("img", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
 
-source("./src/GaussianProcess/nuFixed/ParameterFunctions.R", chdir = TRUE)
+source(file.path("src", model, "ParameterFunctions.R"), chdir = TRUE)
 
 all_sets <- c("train", "val", "test")
 
@@ -37,7 +38,7 @@ if (quick) {
 
 params <- lapply(all_sets,  function(set, ...) {
   prepare_wrapper(
-    path = paste0(int_path, set),
+    path = file.path(int_path, set),
     nuGrid = 1,
     nLambda = nLambda[set],
     nTheta = nTheta[set],
@@ -55,7 +56,7 @@ names(params) <- all_sets
 # distribution plot. We use a complete grid of parameter values to facilitate
 # a facetted plot.
 params[["scenarios"]] <- prepare_wrapper(
-  path = paste0(int_path, "scenarios"),
+  path = file.path(int_path, "scenarios"),
   nLambda = 3,  nTheta = 3, nuGrid = 1,
   dfRange = dfRange["test", ],
   rangeTheta = rangeTheta["test", ],

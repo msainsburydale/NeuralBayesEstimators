@@ -1,8 +1,5 @@
 data_type <- "regular"
-data_path <- paste0("data/RedSea/", data_type, "/")
-img_path  <- paste0("img/RedSea/", data_type, "/")
-results_path  <- paste0("results/RedSea/", data_type, "/")
-dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
+results_path  <- file.path("results", "RedSea", data_type)
 dir.create(results_path, showWarnings = FALSE, recursive = TRUE)
 
 suppressMessages({
@@ -18,7 +15,7 @@ suppressMessages({
   # library("ggOceanMaps")
   options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 })
-source("src/PlottingFunctions.R")
+source(file.path("src", "PlottingFunctions.R"))
 
 # Base map for the Red Sea
 # dt <- data.frame(lon = c(37.1, 37.1,  43,  43),
@@ -63,12 +60,12 @@ renamedelta <- function(df) {
 
 caption <- "Parameter estimates and confidence intervals for the Red Sea data set."
 
-theta_hat_DNN <- read.csv("intermediates/RedSea/DNNregular/Estimates/real_data_estimates.csv") %>% renamedelta %>% round(2)
-theta_hat_CNN <- read.csv("intermediates/RedSea/CNN/Estimates/real_data_estimates.csv") %>% renamedelta %>% round(2)
+theta_hat_DNN <- read.csv(file.path("intermediates", "RedSea", "DNNregular", "Estimates", "real_data_estimates.csv")) %>% renamedelta %>% round(2)
+theta_hat_CNN <- read.csv(file.path("intermediates", "RedSea", "CNN", "Estimates", "real_data_estimates.csv")) %>% renamedelta %>% round(2)
 rownames(theta_hat_CNN) <- rownames(theta_hat_DNN) <- "Estimate"
 
-theta_tilde_DNN <- read.csv("intermediates/RedSea/DNNregular/Estimates/bootstrap_samples_nonparametric.csv")  %>% renamedelta
-theta_tilde_CNN <- read.csv("intermediates/RedSea/CNN/Estimates/bootstrap_samples_nonparametric.csv")  %>% renamedelta
+theta_tilde_DNN <- read.csv(file.path("intermediates", "RedSea", "DNNregular", "Estimates", "bootstrap_samples_nonparametric.csv"))  %>% renamedelta
+theta_tilde_CNN <- read.csv(file.path("intermediates", "RedSea", "CNN", "Estimates", "bootstrap_samples_nonparametric.csv"))  %>% renamedelta
 
 CI_DNN <- apply(theta_tilde_DNN, 2, function(x) quantile(x, c(alpha/2, 1 - alpha/2))) %>% round(2)
 CI_CNN <- apply(theta_tilde_CNN, 2, function(x) quantile(x, c(alpha/2, 1 - alpha/2))) %>% round(2)
@@ -91,23 +88,23 @@ combined <- rbind(CNN, DNN)
 #   str_replace("τ", "$tau$") %>%
 #   str_replace("δ1", "$delta_1$")
 
-write.csv(combined, paste0(results_path, "estimates_and_confidence_intervals_wide.csv"))
+write.csv(combined, file.path(results_path, "estimates_and_confidence_intervals_wide.csv"))
 xtable(combined, type = "latex",
        caption = caption) %>%
-  print(file = paste0(results_path, "estimates_and_confidence_intervals_wide.tex"))
+  print(file = file.path(results_path, "estimates_and_confidence_intervals_wide.tex"))
 
 # The wide format ended up being way too wide for to fit in the manuscript..
 # instead, we'll have to have estimates and confidence intervals on separate rows
 
-write.csv(combined, paste0(results_path, "estimates_and_confidence_intervals_long.csv"))
+write.csv(combined, file.path(results_path, "estimates_and_confidence_intervals_long.csv"))
 xtable(t(combined), type = "latex",
        caption = caption) %>%
-  print(file = paste0(results_path, "estimates_and_confidence_intervals_long.tex"))
+  print(file = file.path(results_path, "estimates_and_confidence_intervals_long.tex"))
 
 # ---- Variable sample size ----
 
 df <- lapply(c("CNN", "DNNregular", "DNNirregular"), function(x) {
-  str_interp("intermediates/RedSea/${x}/Estimates/merged_test.csv") %>%
+  file.path("intermediates", "RedSea", x, "Estimates", "merged_test.csv") %>%
     read.csv  %>%
     filter(estimator == "ND_m150") %>%
     mutate(estimator = x)
@@ -151,7 +148,7 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
           legend.key.height = unit(1, "cm"))
 
   ggsave(
-    gg, width = 12, height = 6, device = "pdf", path = "img/RedSea/",
+    gg, width = 12, height = 6, device = "pdf", path = file.path("img", "RedSea"),
     file = paste0(loss, "_vs_m.pdf"),
   )
 })
@@ -161,7 +158,7 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
 # ---- Variable sample size (regular data only) ----
 
 df <- lapply(c("CNN", "DNNregular"), function(x) {
-  str_interp("intermediates/RedSea/${x}/Estimates/merged_test.csv") %>%
+  file.path("intermediates", "RedSea", x, "Estimates", "merged_test.csv") %>%
     read.csv  %>%
     filter(estimator == "ND_m150") %>%
     mutate(estimator = x)
@@ -203,7 +200,7 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
           legend.key.height = unit(1, "cm"))
 
   ggsave(
-    gg, width = 12, height = 6, device = "pdf", path = "img/RedSea/",
+    gg, width = 12, height = 6, device = "pdf", path = file.path("img", "RedSea"),
     file = paste0(loss, "_vs_m_regularOnly.pdf"),
   )
 })

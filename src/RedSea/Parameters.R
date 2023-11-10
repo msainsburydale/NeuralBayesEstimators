@@ -4,7 +4,7 @@
 
 quick <- identical(commandArgs(trailingOnly=TRUE)[1], "--quick")
 
-source("./src/GaussianProcess/nuFixed/ParameterFunctions.R", chdir = TRUE)
+source(file.path("src", "GaussianProcess", "nuFixed", "ParameterFunctions.R"), chdir = TRUE)
 
 suppressMessages({
 library("dplyr")
@@ -81,20 +81,20 @@ generate_parameter_configurations <- function(type) {
   cat("\nGenerating parameter configurations for the", type, "Red Sea data set...\n")
 
   # Directories
-  data_path <- paste0("./data/RedSea/", type)
-  path      <- paste0("./intermediates/RedSea/", type,"/parameter_configurations/")
-  img_path  <- paste0("img/", type, "/RedSea")
+  data_path <- file.path("data", "RedSea", type)
+  path      <- file.path("intermediates", "RedSea", type, "parameter_configurations") 
+  img_path  <- file.path("img", type, "RedSea")
   dir.create(path, showWarnings = FALSE, recursive = TRUE)
   dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 
   # ---- Generate Cholesky Factors ----
 
-  load(file = paste0(data_path, "/S.rda"))
+  load(file = file.path(data_path, "S.rda"))
 
   params <- lapply(all_sets, function(set) {
     prepare_wrapper(
       S = S,
-      path = paste0(path, set),
+      path = file.path(path, set),
       nuGrid = param_grid[[set]][, "nu"],
       thetaGrid = param_grid[[set]][, "rho"],
       completeGrid = FALSE, saveLambda = FALSE, lambdaGrid = 0
@@ -108,7 +108,7 @@ generate_parameter_configurations <- function(type) {
   xi <- lapply(all_sets, function(set) {
 
     xi <- param_grid[[set]]
-    save(file = paste0(path, set, "_xi.rda"), xi)
+    save(file = file.path(path, paste0(set, "_xi.rda")), xi)
 
     xi
   })

@@ -1,97 +1,64 @@
-source("src/PlottingFunctions.R")
-library("forcats") # fct_rev
-
-model <- "GaussianProcess/nuFixed"
-intermediates_path  <- paste0("intermediates/", model, "/")
-estimates_path      <- paste0(intermediates_path, "Estimates/")
-img_path            <- paste0("img/", model)
-
-# NB: Order of this list gives the order of the facets in the risk plots
-param_labels <- c(
-  "σ"  = expression(sigma[epsilon]),
-  "ρ"  = expression(rho)
+library("optparse")
+option_list = list(
+  make_option(c("-q", "--quick"), action="store_true", default = FALSE,
+              help = "Generate small number of parameter", type = "logical")
 )
+opt_parser <- OptionParser(option_list = option_list)
+opt   <- parse_args(opt_parser)
+quick <- opt$quick
 
-## Subset of estimators
-estimators <- c("N_m1",  "ND_piecewise", "ML")
+model    <- file.path("GaussianProcess", "nuFixed")
+int_path <- file.path("intermediates", model, "parameter_configurations")
+img_path <- file.path("img", model)
+dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
+
+source(file.path("src", model, "ParameterFunctions.R"), chdir = TRUE)
+
+all_sets <- c("train", "val", "test")
+
+rangeTheta <- rbind(train = c(min = 0.2, max = 50),
+                    val   = c(min = 1.8, max = 27),
+                    test  = c(min = 2.0, max = 25))
+
+dfRange <- rbind(train = c(min = 1, max = 255),
+                 val   = c(min = 35, max = 224),
+                 test  = c(min = 40, max = 216))
 
 
-# ---- Variable sample size ----
+## Number of combinations of theta and nu to use, and the number of values of
+## lambda to use with each theta-nu pair:
+if (quick) {
+  nTheta <- c(train = 100, val = 55, test = 55)
+  nLambda  <- c(train = 10, val = 5, test = 5)
+} else {
+  nTheta <- c(train = 200, val = 40, test = 30)
+  nLambda  <- c(train = 201, val = 50, test = 30)
+}
 
-# Load in estimates + true parameters
-df     <- estimates_path %>% paste0("merged_test.csv") %>% read.csv
-likelihood_path <- paste0(estimates_path, "merged_likelihood_test.csv")
-if (file.exists(likelihood_path)) df <- rbind(df, read.csv(likelihood_path))
-
-all_loss <- c("MAE", "RMSE", "MSE", "MAD", "zeroone")
-
-risk_plots <- lapply(all_loss, function(loss) {
-
-  gg <- df %>%
-    filter(estimator %in% estimators) %>%
-    diagnosticplot(param_labels, loss = eval(parse(text = loss))) +
-    theme(
-      strip.text = element_text(size = 17),
-      axis.title = element_text(size = 17),
-      axis.text = element_text(size = 15)
-    )
-
-  ggsave(
-    gg, width = 8, height = 3.5, device = "pdf", path = img_path,
-    file = paste0(loss, "_vs_m.pdf"),
+params <- lapply(all_sets,  function(set, ...) {
+  prepare_wrapper(
+    path = paste0(int_path, set),
+    nuGrid = 1,
+    nLambda = nLambda[set],
+    nTheta = nTheta[set],
+    rangeTheta = rangeTheta[set, ],
+    dfRange = dfRange[set, ],
+    ...
   )
-
-  gg
 })
-
-names(risk_plots) <- all_loss
-risk_plot <- risk_plots[["MSE"]]
-
-# ---- Joint distribution ----
-
-# Load in estimates + true parameters
-df     <- estimates_path %>% paste0("merged_scenarios.csv") %>% read.csv
-likelihood_path <- paste0(estimates_path, "merged_likelihood_scenarios.csv")
-if (file.exists(likelihood_path)) df <- rbind(df, read.csv(likelihood_path))
-
-all_m  <- unique(df$m)
-
-x <- lapply(all_m, function(i) {
-
-  # filter the estimates to only a subset of m and estimators
-  df <- df %>% filter(m == i, estimator %in% estimators)
-
-  figure <- scatterplotlong(df, param_labels) + facet_wrap(fct_rev(as.factor(k)) ~ ., scales = "free")
-
-  ggsave(figure,
-         file = str_interp("Scatterplot_m${i}.pdf"), device = "pdf",
-         width = 6.7, height = 5, path = img_path)
-})
+names(params) <- all_sets
 
 
-# ---- Single joint distribution ----
+# ---- Scenario parameters ----
 
-estimates_plot <- df %>%
-  filter(m == 150, k == 1, estimator %in% estimators) %>%
-  scatterplotlong(param_labels)
-
-
-# ---- Combined risk and scatter plot ----
-
-# To align the top border of the panels, we use a blank title and change its size appropriately
-blank_title   <- function(gg) gg + labs(title = " ") + theme(plot.title = element_text(size = 18))
-
-# Change elements of the plots to make it easier to read
-increase_font <- function(gg) gg + theme(axis.title = element_text(size = 17), axis.text = element_text(size = 15))
-strip_size <- 17
-
-risk_plot <- (risk_plot + theme(strip.text = element_text(size = strip_size))) %>% increase_font
-estimates_plot <- estimates_plot %>% blank_title %>% increase_font
-
-ggsave(
-  ggarrange(risk_plot, estimates_plot,
-            common.legend = TRUE, legend = "right", widths = c(2, 1)),
-  file = str_interp("risk_and_scatterplot.pdf"), device = "pdf",
-  width = 12, height = 4, path = img_path
+# Here, we select a subset of tests parameters that will be used for the joint
+# distribution plot. We use a complete grid of parameter values to facilitate
+# a facetted plot.
+params[["scenarios"]] <- prepare_wrapper(
+  path = paste0(int_path, "scenarios"),
+  nLambda = 3,  nTheta = 3, nuGrid = 1,
+  dfRange = dfRange["test", ],
+  rangeTheta = rangeTheta["test", ],
+  completeGrid = TRUE
 )
 
