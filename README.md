@@ -28,7 +28,6 @@ First, download this repository and navigate to its top-level directory within t
 ### Data
 
 The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data are not downloading as expected, please download them from [here](https://zenodo.org/record/8134200) and place them into the folder `data/RedSea`.
-<!-- [here](https://hpc.niasra.uow.edu.au/ckan/dataset/red_sea_temperature) (to download the file, click "Explore" > "Go to resource") and place them into the folder `data/RedSea`. -->
 
 Note that checks at the beginning of the replication script will immediately notify the user if these data are not present.
 
@@ -63,15 +62,15 @@ Once Julia and R are setup, install package dependencies as follows:
 
 The fast construction of neural Bayes estimators requires graphical processing units (GPUs). Hence, although the code in this repository will run without a GPU (i.e., it will run on the CPU), we recommend that the user run this code on a workstation with a GPU. Note that running the "quick" version of the code (see below) is still fast even on the CPU, so the code can still be tested without a GPU.
 
-The Red-Sea application study of Section 4 is memory intensive; at least 128GB of of CPU RAM (or RAM + swap) is needed to run the full (i.e., non "quick") version of this study. If this is an issue, please comment out the line containing `bash sh/RedSea.sh` in the replication script, `sh/all.sh`. (Comments in `.sh` files are made with `#`.)
+The Red-Sea application study of Section 4 is memory intensive; at least 128GB of of CPU RAM (or RAM + swap) is needed to run the full (i.e., non "quick") version of this study. If this is an issue, please comment out the line containing `bash sh/RedSea.sh` in the replication script (see below).
 
 ### Reproducing the results
 
-The replication script is `sh/all.sh`, invoked using `bash sh/all.sh` from the top level of this repository. For all studies, the replication script will automatically train the neural estimators, generate estimates from both the neural and likelihood-based estimators, and populate the `img` and `results` folders with the figures and results of the manuscript.
+The replication script is `sh/all.sh`, invoked using `bash sh/all.sh` from the top level of this repository. Alternatively, Windows users may use `bat\run_all.bat`. For all studies, the replication script will automatically train the neural estimators, generate estimates from both the neural and likelihood-based estimators, and populate the `img` and `results` folders with the figures and results of the manuscript.
 
 The nature of our experiments means that the run time for reproducing the results of the manuscript is substantial (2-3 days in total). When running the replication script, the user will be prompted with an option to quickly establish that the code is working by using a small number of parameter configurations and epochs. Our envisioned workflow is to establish that the code is working with this "quick" option, clear the populated folders by simply entering `bash sh/clear.sh`, and then run the code in full (possibly over the weekend).
 
-Note that the replication script is clearly presented and commented; hence, one may easily "comment out" sections to produce a subset of the results. (Comments in `.sh` files are made with `#`.)
+Note that the replication script is clearly presented and commented; hence, one may easily "comment out" sections to produce a subset of the results. (Comments in `.sh` files are made with `#`, while comments in `.bat` files are made using `::`.)
 
 #### Minor reproducibility difficulties
 
