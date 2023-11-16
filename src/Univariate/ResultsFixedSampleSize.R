@@ -6,13 +6,11 @@ option_list <- list(
 opt_parser <- OptionParser(option_list=option_list)
 model      <- parse_args(opt_parser)$model
 
-source("src/PlottingFunctions.R")
+source(joinpath("src", "PlottingFunctions.R"))
 
 # ---- Prep ----
 
-intermediates_path  <- paste0("intermediates/Univariate/", model, "/")
-estimates_path      <- paste0(intermediates_path, "Estimates/")
-img_path            <- paste0("img/Univariate/", model)
+img_path <- file.path("img", "Univariate", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
 
 param_labels <- c("θ"  = expression(theta))
@@ -45,8 +43,9 @@ estimator_linetypes <- c(
 # ---- Density plot  ----
 
 # Load in estimates + true parameters
-xi_hat <- estimates_path %>% paste0("estimates_scenarios.csv")  %>% read.csv
-xi     <- estimates_path %>% paste0("parameters_scenarios.csv") %>% read.csv
+estimates_path <- file.path("intermediates", "Univariate", model, "Estimates") 
+xi_hat <- file.path(estimates_path, "estimates_scenarios.csv")  %>% read.csv
+xi     <- file.path(estimates_path, "parameters_scenarios.csv") %>% read.csv
 truth  <- xi$θ[1]
 theta <- truth
 a <- 4

@@ -11,7 +11,7 @@ suppressMessages({
 # Load the loss function per epoch files:
 all_dirs  <- list.dirs(path = file.path("intermediates", path), recursive = TRUE)
 runs_dirs <- all_dirs[which(grepl("runs_", all_dirs))]
-# determine models automatically from runs_dirs (every unique value between "Pretraining/' and "/NotPretrained")
+# determine models automatically from runs_dirs (every unique value between "Pretrained' and "NotPretrained")
 schemes   <- c("Pretrained", "NotPretrained")
 loss_per_epoch_list <- lapply(schemes, function(scheme) {
   path <- file.path("intermediates", path, scheme, "runs_N30", "loss_per_epoch.csv")

@@ -7,6 +7,9 @@ using Flux
 using NeuralEstimators
 using RData
 
+const PATH_SEPARATOR = joinpath("_", "_")[2]
+export PATH_SEPARATOR
+
 
 # ---- Parameters definitions and constructors ----
 

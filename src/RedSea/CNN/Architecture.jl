@@ -13,9 +13,9 @@
 using Flux
 using SpatialDeepSets: loadwithoutdict
 
-path = joinpath(pwd(), "data/RedSea/regular/")
-wᵢ = loadwithoutdict(path * "width.rda", "width")
-hᵢ = loadwithoutdict(path * "height.rda", "height")
+path = joinpath(pwd(), "data", "RedSea", "regular")
+wᵢ = loadwithoutdict(joinpath(path, "width.rda"), "width")
+hᵢ = loadwithoutdict(joinpath(path, "height.rda"), "height")
 wₒ = 16
 hₒ = 16
 wₖ = wᵢ - wₒ + 1

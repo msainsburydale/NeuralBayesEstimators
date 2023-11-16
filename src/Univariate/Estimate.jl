@@ -16,15 +16,14 @@ using DataFrames
 using CSV
 using Random: seed!
 
-relative_loadpath = "intermediates/Univariate/$(model)"
-relative_savepath = relative_loadpath * "/Estimates"
-savepath = joinpath(pwd(), relative_savepath)
+relative_loadpath = joinpath("intermediates", "Univariate", model)
+savepath = joinpath(pwd(), relative_loadpath, "Estimates")
 if !isdir(savepath) mkdir(savepath) end
 
-include(joinpath(pwd(), "src/Univariate/$model/BayesEstimator.jl"))
-include(joinpath(pwd(), "src/Univariate/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/Univariate/$model/Simulation.jl"))
-include(joinpath(pwd(), "src/Univariate/Architecture.jl"))
+include(joinpath(pwd(), "src", "Univariate", model, "BayesEstimator.jl"))
+include(joinpath(pwd(), "src", "Univariate", model, "Parameters.jl"))
+include(joinpath(pwd(), "src", "Univariate", model, "Simulation.jl"))
+include(joinpath(pwd(), "src", "Univariate", "Architecture.jl"))
 
 seed!(1)
 θ_test = Parameters(1000, ξ)
@@ -51,8 +50,8 @@ function loadneuralestimators(loadpath)
 
 		# Get the size of the latent space and the aggregation used
 		path = joinpath(pwd(), loadpath, "runs_$title")
-		qₜ = CSV.read("$path/qt.csv", DataFrame, header = false)[1, 1]
-		aggregation = CSV.read("$path/aggregation.csv", DataFrame, header = false)[1, 1]
+		qₜ = CSV.read(joinpath(path, "qt.csv"), DataFrame, header = false)[1, 1]
+		aggregation = CSV.read(joinpath(path, "aggregation.csv"), DataFrame, header = false)[1, 1]
 		aggregation = String(aggregation)
 
 		# Load the network

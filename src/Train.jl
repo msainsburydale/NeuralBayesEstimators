@@ -22,8 +22,6 @@ model = parsed_args["model"]
 quick = parsed_args["quick"]
 deep  = parsed_args["deep"]
 
-# See https://stackoverflow.com/a/61297773
-# m     = parsed_args["m"]; if m < 0 m = 1:(-m) end
 m = let expr = Meta.parse(parsed_args["m"])
     @assert expr.head == :vect
     Int.(expr.args)
@@ -40,19 +38,20 @@ using DataFrames
 using Tables
 using Random: seed!
 
-include(joinpath(pwd(), "src/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/$model/Simulation.jl"))
-include(joinpath(pwd(), "src/Architecture.jl"))
+model = replace(model, "/" => PATH_SEPARATOR)
+include(joinpath(pwd(), "src", "$model", "Parameters.jl"))
+include(joinpath(pwd(), "src", "$model", "Simulation.jl"))
+include(joinpath(pwd(), "src", "Architecture.jl"))
 
-if !isdir("intermediates/$model") mkpath("intermediates/$model") end
+if !isdir(joinpath("intermediates", model)) mkpath(joinpath("intermediates", model)) end
 
 batchsize = 32
 
-if model == "GaussianProcess/nuFixed"
+if model == joinpath("GaussianProcess", "nuFixed")
 
-	params_path = joinpath(pwd(), "intermediates/GaussianProcess/nuFixed/parameter_configurations/")
-	θ_train     = Parameters(params_path * "train_")
-	θ_val       = Parameters(params_path * "val_")
+	params_path = joinpath(pwd(), "intermediates", model, "parameter_configurations")
+	θ_train     = Parameters(joinpath(params_path, "train_"))
+	θ_val       = Parameters(joinpath(params_path, "val_"))
 
 else
 
@@ -64,11 +63,9 @@ else
 		K_val   = K_val ÷ 100
 	end
 
-	@info "Sampling validation parameters..."
-	sample_time = @elapsed θ_val = Parameters(K_val, ξ)
 	@info "Sampling training parameters..."
-	sample_time += @elapsed θ_train = Parameters(K_train, ξ)
-	CSV.write("intermediates/$model/sample_time.csv", Tables.table([sample_time]), header = false)
+	θ_val = Parameters(K_val, ξ)
+	θ_train = Parameters(K_train, ξ)
 end
 
 seed!(1)
@@ -80,7 +77,7 @@ else
 	θ̂ = DeepSet(Chain(ψ, ϕ), identity)
 end
 
-savepath = "intermediates/$model/runs_N$(deep ? "D" : "")"
+savepath = joinpath("intermediates", model, "runs_N$(deep ? "D" : "")")
 
 epochs = quick ? 5 : 300
 
@@ -96,11 +93,9 @@ if length(m) == 1
 	)
 else
 
-	@info "Simulating validation data..."
-	sim_time = @elapsed Z_val = simulate(θ_val, maximum(m))
 	@info "Simulating training data..."
-	sim_time += @elapsed Z_train = simulate(θ_train, 2 * maximum(m))
-	CSV.write("intermediates/$model/sim_time.csv", Tables.table([sim_time]), header = false)
+	Z_val = simulate(θ_val, maximum(m))
+	Z_train = simulate(θ_train, 2 * maximum(m))
 
 	for mᵢ ∈ m
 

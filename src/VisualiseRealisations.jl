@@ -18,9 +18,10 @@ using DataFrames
 using CSV
 using Random: seed!
 
+model = replace(model, "/" => PATH_SEPARATOR)
 include(joinpath(pwd(), "src", model, "Parameters.jl"))
 include(joinpath(pwd(), "src", model, "Simulation.jl"))
-if model == "GaussianProcess/nuFixed"
+if model == joinpath("GaussianProcess", "nuFixed")
   params_path = joinpath(pwd(), "intermediates", model, "parameter_configurations")
 	θ_test      = Parameters(joinpath(params_path, "test_"))
 	θ_scenarios = Parameters(joinpath(params_path, "scenarios_"))
@@ -38,7 +39,7 @@ Z = fields_df.Z
 println("Field simulations: Minimum = $(minimum(Z)), Mean = $(sum(Z)/length(Z)), Maximum = $(maximum(Z))\n")
 
 # Save the fields
-savepath = joinpath(pwd(), "intermediates/$model")
+savepath = joinpath(pwd(), "intermediates", model)
 !ispath(savepath) && mkpath(savepath)
 CSV.write(joinpath(savepath, "fields.csv"), fields_df)
 

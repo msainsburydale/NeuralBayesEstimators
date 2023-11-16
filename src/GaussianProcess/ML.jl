@@ -1,7 +1,7 @@
 using LinearAlgebra
 using NeuralEstimators
 using SpatialDeepSets
-include(joinpath(pwd(), "src/ML.jl"))
+include(joinpath(pwd(), "src", "ML.jl"))
 
 
 function covariancematrix(D; σₑ, ρ, ν)

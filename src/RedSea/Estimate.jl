@@ -16,8 +16,8 @@ arch      = parsed_args["arch"]
 @assert arch ∈ ("CNN", "DNN")
 @assert !(data_type == "irregular" && arch == "CNN") "CNN cannot be used with irregular data"
 
-intermediates_path = "intermediates/RedSea/$arch"
-if arch == "DNN" intermediates_path = "intermediates/RedSea/DNN" * data_type end
+intermediates_path = joinpath("intermediates", "RedSea", arch)
+if arch == "DNN" intermediates_path = intermediates_path * data_type end
 
 using SpatialDeepSets
 using Distances: pairwise, Euclidean
@@ -25,15 +25,15 @@ using LinearAlgebra
 using DataFrames
 using CSV
 using Random: seed!
-include(joinpath(pwd(), "src/RedSea/Parameters.jl"))
-include(joinpath(pwd(), "src/RedSea/$arch/Simulation.jl"))
-include(joinpath(pwd(), "src/RedSea/$arch/Architecture.jl"))
-params_path = joinpath(pwd(), "intermediates/RedSea/" * data_type * "/parameter_configurations/")
-θ_test      = Parameters(params_path * "test_", data_type)
-θ_scenarios = Parameters(params_path * "scenarios_", data_type)
+include(joinpath(pwd(), "src", "RedSea", "Parameters.jl"))
+include(joinpath(pwd(), "src", "RedSea", arch, "Simulation.jl"))
+include(joinpath(pwd(), "src", "RedSea", arch, "Architecture.jl"))
+params_path = joinpath(pwd(), "intermediates", "RedSea", data_type, "parameter_configurations")
+θ_test      = Parameters(joinpath(params_path, "test_"), data_type)
+θ_scenarios = Parameters(joinpath(params_path, "scenarios_"), data_type)
 
 relative_loadpath = intermediates_path
-relative_savepath = intermediates_path * "/Estimates"
+relative_savepath = joinpath(intermediates_path, "Estimates")
 savepath = joinpath(pwd(), relative_savepath)
 if !isdir(savepath) mkdir(savepath) end
 
@@ -64,14 +64,14 @@ net = net |> gpu # move to the GPU
 parameter_names = ξ.parameter_names
 
 # number of replicates available at the estimation stage, mₑ:
-mₑ = loadwithoutdict(joinpath(pwd(), "data/RedSea/" * data_type *"/m_e.rda"), "m_e") |> Int
+mₑ = loadwithoutdict(joinpath(pwd(), "data", "RedSea", data_type, "m_e.rda"), "m_e") |> Int
 
 # Load the data
-data_path = joinpath(pwd(), "data/RedSea/" * data_type * "/")
-blocks   = loadwithoutdict(data_path * "/blocks.rda", "blocks")
-region   = loadwithoutdict(data_path * "/region_id.rda", "region_id")
-u        = loadwithoutdict(data_path * "/u.rda", "u")
-Z_RedSea = loadwithoutdict(data_path * "extreme_data_subset_LaplaceScale.rda", "extreme_data_L")
+data_path = joinpath(pwd(), "data", "RedSea", data_type)
+blocks   = loadwithoutdict(joinpath(data_path, "blocks.rda"), "blocks")
+region   = loadwithoutdict(joinpath(data_path, "region_id.rda"), "region_id")
+u        = loadwithoutdict(joinpath(data_path, "u.rda"), "u")
+Z_RedSea = loadwithoutdict(joinpath(data_path, "extreme_data_subset_LaplaceScale.rda"), "extreme_data_L")
 Z_RedSea = Float32.(Z_RedSea)
 Z_RedSea = cbrt.(Z_RedSea) # variance stablising transformation
 
@@ -110,10 +110,10 @@ CSV.write(joinpath(savepath, "fitted_model_simulations.csv"), Z_df)
 
 # ---- Bootstrapping ----
 
-include(joinpath(pwd(), "src/RedSea/Bootstrap.jl"))
+include(joinpath(pwd(), "src", "RedSea", "Bootstrap.jl"))
 
 # Bootstrap samples of θ̂ (non-parametric)
-blocks = loadwithoutdict(joinpath(pwd(), "data/RedSea/" * data_type * "/blocks.rda"), "blocks")
+blocks = loadwithoutdict(joinpath(pwd(), "data", "RedSea", data_type, "blocks.rda"), "blocks")
 bootstrap(net, Z_RedSea, blocks = blocks, B = 10) # one run to compile the function
 t = @elapsed θ̃ = bootstrap(net, Z_RedSea, blocks = blocks, B = B)
 θ̃ = θ̃ |> cpu
