@@ -22,11 +22,11 @@ echo.
 echo ######## Starting the experiments... ############
 echo.
 
-call sh\Univariate.bat          :: Section 2 and Section S2 of the Supplementary Material
-call sh\SimulationStudies.bat   :: Section 3 and Section S7 of the Supplementary Material
-call sh\SimulationOnTheFly.bat  :: Section S4 of the Supplementary Material
-call sh\Pretraining.bat         :: Section S5 of the Supplementary Material
-call sh\RedSea.bat              :: Section 4
+call .\bat\Univariate.bat          :: Section 2 and Section S2 of the Supplementary Material
+call .\bat\SimulationStudies.bat   :: Section 3 and Section S7 of the Supplementary Material
+call .\bat\SimulationOnTheFly.bat  :: Section S4 of the Supplementary Material
+call .\bat\Pretraining.bat         :: Section S5 of the Supplementary Material
+call .\bat\RedSea.bat              :: Section 4
 
 echo.
 echo ######## Everything finished! ############
