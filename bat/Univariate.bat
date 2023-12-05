@@ -6,13 +6,14 @@ set /p quick_str=
 
 if /i "!quick_str!" equ "y" (
     set quick=--quick
-) elif /i "!quick_str!" equ "n" (
-    set quick=
 ) else (
-    echo Please re-run and type y or n
-    exit /b 1
+    if /i "!quick_str!" equ "n" (
+        set quick=
+    ) else (
+        echo Please re-run and type y or n
+        exit /b 1
+    )
 )
-
 set model=Uniform
 
 echo.
