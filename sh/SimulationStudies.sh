@@ -3,7 +3,7 @@ unset R_HOME
 
 set -e
 
-if [[ ! -v quick_str ]]; then
+if [ ! ${quick_str} ]; then
   echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n)"
   read quick_str
 fi
