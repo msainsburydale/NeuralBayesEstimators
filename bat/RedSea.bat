@@ -1,23 +1,20 @@
 @echo off
 setlocal enabledelayedexpansion
 
-echo.
-echo ######## Setting up ############
-echo.
-
-:: Check that the data is installed
 if not exist data\RedSea\redseatemperature.rdata (
     echo The Red Sea data set has not been downloaded, or is in the wrong location. Please see the README for download instructions.
     exit /b 1
 )
 
-echo Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n)
-set /p quick_str=
+if not defined quick_str (
+    echo Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n)
+    set /p quick_str=
+)
 
-if /i "!quick_str!" equ "y" (
-    set quick=--quick
-) elif /i "!quick_str!" equ "n" (
-    set quick=
+if /i "!quick_str!"=="y" (
+    set "quick=--quick"
+) else if /i "!quick_str!"=="n" (
+    set "quick="
 ) else (
     echo Please re-run and type y or n
     exit /b 1
@@ -47,7 +44,4 @@ for %%i in (regular irregular) do (
     Rscript src\RedSea\Results.R --arch=DNN --data_type=%%i
 )
 
-:: Plots that involve all of the neural estimators
-Rscript src\RedSea\ResultsCombined.R
-
-endlocal
+:: Plots t
