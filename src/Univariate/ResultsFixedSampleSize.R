@@ -27,8 +27,8 @@ estimator_labels <- c(
 
 estimator_colours <- c(
   "BayesEstimator" = "#21908CFF",
-  "OAATEstimator" = "orange",
-  "NN_m10" = "red",
+  "OAATEstimator" = "red",
+  "NN_m10" = "orange",
   "ML"    = "#440154FF",
   "MAPEstimator"    = "pink"
 )
@@ -121,6 +121,34 @@ ggsave(
   densityplot(xi_hat, estimator_subset),
   file = "density_noMAP.pdf",
   width = 7, height = 3.5, path = img_path, device = "pdf"
+)
+
+# ---- Scatter plot ----
+
+scatterplot <- function(xi_hat) {
+  xi_hat <- xi_hat %>% filter(m == 10, estimator %in% c("NN_m10", "BayesEstimator"))
+  
+  xi_hat$diff <- xi_hat$θ - truth
+  xi_hat$θ <- NULL
+  xi_hat$k <- NULL
+  xi_hat$m <- NULL
+  
+  lim <- range(xi_hat$diff)
+  
+  xi_hat <- pivot_wider(xi_hat, names_from = "estimator", values_from = "diff")
+  
+  ggplot(xi_hat) + 
+    geom_point(aes(x = BayesEstimator, y = NN_m10), alpha = 0.3, size = 0.5) +
+    geom_abline(slope = 1, intercept = 0, colour = "red") + 
+    labs(x = expression(hat(theta)[Bayes] - theta), y = expression(hat(theta)[NBE] - theta)) + 
+    lims(x = lim, y = lim) + 
+    theme_bw() + coord_fixed()
+  
+}
+
+fig <- ggarrange(densityplot(xi_hat,  c("NN_m10", "BayesEstimator")) + theme(legend.position = "top"), scatterplot(xi_hat))
+ggsave(
+  fig, file = "density_and_scatterplot.pdf", width = 7, height = 3.5, path = img_path, device = "pdf"
 )
 
 
