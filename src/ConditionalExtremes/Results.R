@@ -1,9 +1,9 @@
-source("src/PlottingFunctions.R")
+source(file.path("src", "PlottingFunctions.R"))
 
 model <- "ConditionalExtremes"
-intermediates_path  <- paste0("intermediates/", model, "/")
-estimates_path      <- paste0(intermediates_path, "Estimates/")
-img_path            <- paste0("img/", model)
+intermediates_path  <- file.path("intermediates", model)
+estimates_path      <- file.path(intermediates_path, "Estimates")
+img_path            <- file.path("img", model)
 
 # NB: Order of this vector gives the order of the facets in the MAD plot
 param_labels <- c(
@@ -37,8 +37,8 @@ estimators <- c("N_m1",  "ND_piecewise", "ML")
 # ---- Variable sample size ----
 
 # Load in estimates + true parameters
-df     <- estimates_path %>% paste0("merged_test.csv") %>% read.csv
-likelihood_path <- paste0(estimates_path, "merged_likelihood_test.csv")
+df  <- file.path(estimates_path, "merged_test.csv") %>% read.csv
+likelihood_path <- file.path(estimates_path, "merged_likelihood_test.csv")
 if (file.exists(likelihood_path)) df <- rbind(df, read.csv(likelihood_path))
 df$parameter <- gsub("δ₁", "δ1", df$parameter)
 
@@ -72,13 +72,13 @@ x <- lapply(c("MAE", "RMSE", "MSE", "MAD", "zeroone"), function(loss) {
 # ---- Joint distribution of the estimators ----
 
 # Load in estimates + true parameters
-df     <- estimates_path %>% paste0("merged_scenarios.csv") %>% read.csv
-likelihood_path <- paste0(estimates_path, "merged_likelihood_scenarios.csv")
+df     <- file.path(estimates_path, "merged_scenarios.csv") %>% read.csv
+likelihood_path <- file.path(estimates_path, "merged_likelihood_scenarios.csv")
 if (file.exists(likelihood_path)) df <- rbind(df, read.csv(likelihood_path))
 df$parameter <- gsub("δ₁", "δ1", df$parameter)
 
 # Load realisations from the model
-fields <- paste0(intermediates_path, "fields.csv") %>% read.csv
+fields <- file.path(intermediates_path, "fields.csv") %>% read.csv
 
 # filter the estimates to only a subset of estimators
 all_m  <- df$m %>% unique

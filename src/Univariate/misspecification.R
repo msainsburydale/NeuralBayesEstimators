@@ -147,5 +147,5 @@ figure <- ggplot(df_long) +
 ggsave(
   figure,
   file = "misspecification.pdf",
-  width = 8, height = 3, path = "img/Univariate", device = "pdf"
+  width = 8, height = 3, path = file.path("img", "Univariate"), device = "pdf"
 )

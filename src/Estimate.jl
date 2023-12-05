@@ -36,7 +36,9 @@ include(joinpath(pwd(), joinpath("src", model, "Parameters.jl")))
 include(joinpath(pwd(), joinpath("src", model, "Simulation.jl")))
 include(joinpath(pwd(), joinpath("src", "Architecture.jl")))
 
-if model == "GaussianProcess/nuFixed"
+model = replace(model, "/" => PATH_SEPARATOR)
+
+if model == joinpath("GaussianProcess", "nuFixed")
 	params_path = joinpath(pwd(), "intermediates", model, "parameter_configurations")
 	θ_test      = Parameters(joinpath(params_path, "test_"))
 	θ_scenarios = Parameters(joinpath(params_path, "scenarios_"))
@@ -92,7 +94,7 @@ println("Neural network estimators: $(join(titles, ", "))")
 
 if ML
 	println("Number of CPU threads available for likelihood estimation: $(Threads.nthreads())")
-	include(joinpath(pwd(), "src/$model/ML.jl"))
+	include(joinpath(pwd(), "src", model, "ML.jl"))
 
 	if model == "Schlather"
 		PL3(y, ξ) = PL(y, ξ, 3)

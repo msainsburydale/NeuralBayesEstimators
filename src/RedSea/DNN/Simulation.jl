@@ -1,4 +1,4 @@
-include(joinpath(pwd(), "src/ConditionalExtremes/Simulation.jl"))
+include(joinpath(pwd(), "src", "ConditionalExtremes", "Simulation.jl"))
 
 
 function reshapeZ(Z::A, ξ) where {T <: Number, A <: AbstractArray{T, 2}}

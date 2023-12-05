@@ -9,7 +9,7 @@ using SpatialDeepSets: a, b, delta, Φ, t, fₛ, Fₛ, Fₛ⁻¹
 import SpatialDeepSets: C̃, σ̃₀
 
 
-include(joinpath(pwd(), "src/ML.jl"))
+include(joinpath(pwd(), "src", "ML.jl"))
 
 
 # ---- Test that no domain errors occur with the given parameters ----

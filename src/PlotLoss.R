@@ -7,13 +7,14 @@ option_list <- list(
 )
 opt_parser <- OptionParser(option_list=option_list)
 path       <- parse_args(opt_parser)$path
+path       <- gsub("/", .Platform$file.sep, path)
 excluded_m <- parse_args(opt_parser)$excluded_m
 
-intermediates_path <- paste0("intermediates/", path)
-img_path <- paste0("img/", path)
+intermediates_path <- file.path("intermediates", path)
+img_path <- file.path("img", path)
 dir.create(img_path, showWarnings = FALSE, recursive = TRUE)
 
-source("src/PlottingFunctions.R")
+source(file.path("src", "PlottingFunctions.R"))
 
 # Find the runs folders:
 all_dirs <- list.dirs(path = intermediates_path, recursive = TRUE)
@@ -22,7 +23,7 @@ if (!is.null(excluded_m)) runs_dirs <- runs_dirs[!grepl(excluded_m, runs_dirs)]
 
 # Load the loss function per epoch files:
 loss_per_epoch_list <- lapply(runs_dirs, function(x) {
-  loss_per_epoch <- read.csv(paste0(x, "/loss_per_epoch.csv"), header = FALSE)
+  loss_per_epoch <- read.csv(file.path(x, "loss_per_epoch.csv"), header = FALSE)
   colnames(loss_per_epoch) <- c("training", "validation")
   loss_per_epoch$epoch <- 0:(nrow(loss_per_epoch) - 1)
   return(loss_per_epoch)
@@ -47,7 +48,6 @@ df <- df %>%
 
 # Create y limits using the minimum loss over all sets for a given m, so that
 # the panels are directly comparable when appropriate.
-# (see here https://stackoverflow.com/a/42590452)
 df <- df %>%
   group_by(m) %>%
   mutate(ymin = min(loss), ymax = max(loss))

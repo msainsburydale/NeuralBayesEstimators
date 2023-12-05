@@ -1,4 +1,4 @@
-include(joinpath(pwd(), "src/ConditionalExtremes/Simulation.jl"))
+include(joinpath(pwd(), "src", "ConditionalExtremes", "Simulation.jl"))
 
 # Since we're using a CNN, we need to convert each field to a rectangular
 # array, padding with zeros to fill out the rectangle.

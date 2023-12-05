@@ -37,23 +37,23 @@ using DataFrames
 using Tables
 using Random: seed!
 
-include(joinpath(pwd(), "src/Univariate/Architecture.jl"))
-include(joinpath(pwd(), "src/Univariate/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/Univariate/$model/Simulation.jl"))
+include(joinpath(pwd(), "src", "Univariate", "Architecture.jl"))
+include(joinpath(pwd(), "src", "Univariate", model, "Parameters.jl"))
+include(joinpath(pwd(), "src", "Univariate", model, "Simulation.jl"))
 
 m_title = typeof(m) <: AbstractRange ? "$(m.start)to$(m.stop)" : "$m"
 title =  "m$(m_title)$(expert ? "_expert" : "")"
-savepath = "intermediates/Univariate/$model/runs_NN_$title"
+savepath = joinpath("intermediates", "Univariate", model, "runs_NN_$title")
 
 if !isdir(savepath) mkpath(savepath) end
 
 qₜ = 100 # dimension of the learned summary statistic
 CSV.write(
-	joinpath(pwd(), "$savepath/qt.csv"),
+	joinpath(pwd(), savepath, "qt.csv"),
 	Tables.table([qₜ]), header = false
 	)
 CSV.write(
-	joinpath(pwd(), "$savepath/aggregation.csv"),
+	joinpath(pwd(), savepath, "aggregation.csv"),
 	Tables.table([aggregation]), header = false
 	)
 

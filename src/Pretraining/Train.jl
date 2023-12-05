@@ -15,9 +15,10 @@ using SpatialDeepSets
 using Random: seed!
 
 model = "GaussianProcess/nuVaried"
-include(joinpath(pwd(), "src/$model/Parameters.jl"))
-include(joinpath(pwd(), "src/$model/Simulation.jl"))
-include(joinpath(pwd(), "src/Architecture.jl"))
+model = replace(model, "/" => PATH_SEPARATOR)
+include(joinpath(pwd(), "src", model, "Parameters.jl"))
+include(joinpath(pwd(), "src", model, "Simulation.jl"))
+include(joinpath(pwd(), "src", "Architecture.jl"))
 
 K_train = 10_000
 K_val   = K_train ÷ 5
@@ -54,14 +55,14 @@ seed!(1)
 θ̂ = train(
 	  θ̂, θ_train, θ_val, Z_train, subsetdata(Z_val, 1:1),
 	  batchsize = batchsize, epochs = epochs,
-	  savepath = "intermediates/Pretraining/Pretrained/runs_N1",
+	  savepath = joinpath("intermediates", "Pretraining", "Pretrained", "runs_N1"),
 	  stopping_epochs = stopping_epochs
 )
 
 θ̂ = train(
 	  θ̂, θ_train, θ_val, Z_train, Z_val,
 	  batchsize = batchsize, epochs = epochs, optimiser = ADAM(1e-5),
-	  savepath = "intermediates/Pretraining/Pretrained/runs_N30",
+	  savepath = joinpath("intermediates", "Pretraining", "Pretrained", "runs_N30"),
 	  stopping_epochs = stopping_epochs
 )
 
@@ -76,6 +77,6 @@ seed!(1)
 θ̂ = train(
 	  θ̂, θ_train, θ_val, Z_train, Z_val,
 	  batchsize = batchsize, epochs = epochs, optimiser = ADAM(1e-5),
-	  savepath = "intermediates/Pretraining/NotPretrained/runs_N30",
+	  savepath = joinpath("intermediates", "Pretraining", "NotPretrained", "runs_N30"),
 	  stopping_epochs = stopping_epochs
 )

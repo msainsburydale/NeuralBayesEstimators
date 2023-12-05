@@ -8,8 +8,9 @@ opt_parser <- OptionParser(option_list=option_list)
 opt <- parse_args(opt_parser)
 
 model  <- opt$model
-intermediates_path <- paste0("./intermediates/", model)
-img_path <- paste0("./img/", model)
+model  <- gsub("/", .Platform$file.sep, model)
+intermediates_path <- file.path("intermediates", model)
+img_path <- file.path("img", model)
 dir.create(img_path, recursive = TRUE, showWarnings = FALSE)
 
 suppressMessages({
@@ -22,21 +23,21 @@ suppressMessages({
   library("gridExtra")
   library("stringr") # str_interp for string interpolation
   options(dplyr.summarise.inform = FALSE) # Suppress summarise info
-  source("src/PlottingFunctions.R")
+  source(file.path("src", "PlottingFunctions.R"))
 })
 
 
 ## load the parameters
-if (model == "GaussianProcess/nuFixed") {
-  params_path <- paste0(intermediates_path, "/parameter_configurations/")
-  load(paste0(params_path, "scenarios_xi.rda"))
+if (model == file.path("GaussianProcess", "nuFixed")) {
+  params_path <- file.path(intermediates_path, "parameter_configurations"))
+  load(file.path(params_path, "scenarios_xi.rda"))
   theta <- xi # deprecation coercion
 } else {
-  theta <- read.csv(paste0(intermediates_path, "/scenario_parameters.csv"))
+  theta <- read.csv(file.path(intermediates_path, "scenario_parameters.csv"))
 }
 
 ## Visualise the fields
-fields <- paste0(intermediates_path, "/fields.csv") %>% read.csv
+fields <- file.path(intermediates_path, "fields.csv") %>% read.csv
 
 # Use only some of the fields for this plot
 fields <- fields %>% filter(replicate <= 4)
@@ -56,7 +57,7 @@ fieldplots <- lapply(unique(fields$scenario), function(j) {
 
   fieldplots <- ggarrange(plotlist = fieldplots, nrow = 1, ncol = 4)
 
-  # Draw the text that describes the parameters 
+  # Draw the text that describes the parameters
   text <- theta[j, ] %>%
     round(2) %>%
     paste(names(.), ., sep = " = ", collapse = ", ")
@@ -92,4 +93,3 @@ suppressWarnings(
          file = "fields.pdf", device = "pdf", path = img_path)
 
 )
-
