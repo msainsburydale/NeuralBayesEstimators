@@ -5,7 +5,7 @@ set -e
 
 if [[ ! -f data/RedSea/redseatemperature.rdata ]]
 then
-    echo "The Red Sea data set has not been downloaded, or is in the wrong location. Please see the README for download instructions."
+    echo "The Red Sea data set has not been downloaded, or is in the wrong location (it should be in `data/RedSea`). Please see the README for instructions."
     exit 1
 fi
 

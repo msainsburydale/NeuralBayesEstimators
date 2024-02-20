@@ -27,9 +27,7 @@ First, download this repository and navigate to its top-level directory within t
 
 ### Data
 
-The Red Sea data set, analysed in Section 4, was too large (a few hundred Mb in total) to be stored on GitHub. To automatically download it and place it into the correct location, run `bash sh/data.sh`. If the data are not downloading as expected, please download them from [here](https://zenodo.org/record/8134200) and place them into the folder `data/RedSea`.
-
-Note that checks at the beginning of the replication script will immediately notify the user if these data are not present.
+The Red-Sea data set, analysed in Section 4, is not licensed for public distribution. However, it is available upon request, in which case it can be added to the folder `data/RedSea` to reproduce the results given in the manuscript.
 
 ### Software dependencies
 

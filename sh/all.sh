@@ -7,13 +7,6 @@ echo ""
 echo "######## Setting up ############"
 echo ""
 
-# Check that the data is installed
-if [[ ! -f data/RedSea/redseatemperature.rdata ]]
-then
-    echo "The Red Sea data set has not been downloaded, or is in the wrong location. Please see the README for download instructions."
-    exit 1
-fi
-
 # Should we do a "quick" run through to check that things are working?
 echo "Do you wish to use a very low number of parameter configurations and epochs to quickly establish that the code is working? (y/n) "
 read quick_str
